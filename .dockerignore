@@ -1,0 +1,90 @@
+**/*.log
+**/*.md
+**/*.php~
+**/*.dist.php
+**/*.dist
+**/*.cache
+**/._*
+**/.dockerignore
+**/.DS_Store
+**/.git/
+**/.gitattributes
+**/.gitignore
+**/.gitmodules
+**/compose.*.yaml
+**/compose.*.yml
+**/compose.yaml
+**/compose.yml
+**/docker-compose.*.yaml
+**/docker-compose.*.yml
+**/docker-compose.yaml
+**/docker-compose.yml
+**/Dockerfile
+**/Thumbs.db
+.github/
+docs/
+public/bundles/
+tests/
+var/
+vendor/
+.editorconfig
+.env.*.local
+.env.local
+.env.local.php
+.env.test
+
+phpunit.xml.dist
+.phpunit.result.cache
+
+node_modules/
+/public/build/
+npm-debug.log
+yarn-error.log
+
+# Fichiers de build et temporaires
+composer.phar
+composer.lock
+package-lock.json
+
+# Configuration IDE et outils
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# === MYSQL ===
+# Tous les fichiers de données MySQL (Image 2)
+mysql/
+mysql/**/*
+
+# Fichiers binaires et logs MySQL spécifiques
+*.ibd
+*.frm
+*.opt
+auto.cnf
+ib_*
+mysql_upgrade_info
+binlog.*
+
+# Certificats SSL générés automatiquement
+ca-key.pem
+ca.pem
+client-cert.pem
+client-key.pem
+private_key.pem
+public_key.pem
+server-cert.pem
+server-key.pem
+
+# === GÉNÉRAL ===
+# Fichiers système
+.DS_Store
+Thumbs.db
+*.tmp
+
+# Archives et backups
+*.zip
+*.tar.gz
+*.sql.gz
+*.backup

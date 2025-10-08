@@ -1,0 +1,36 @@
+services:
+  database:
+    container_name: database
+    image: mysql
+    labels:
+      com.symfony.server.service-prefix: 'DATABASE'
+    environment:
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_INIT_ONLY=false
+    ports:
+     - 4306:3306
+    volumes:
+      - ./mysql:/var/lib/mysql
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: database
+      PMA_USER: ${DB_USER}
+      PMA_PASSWORD: ${DB_PASSWORD}
+      UPLOAD_LIMIT: 20M
+      APACHE_SERVERNAME: localhost
+    ports:
+      - 8888:80
+
+volumes:
+  mysql:
