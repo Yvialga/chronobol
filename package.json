@@ -1,0 +1,11 @@
+{
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "homepage": "https://github.com/Yvialga/chronobol#readme",
+  "dependencies": {
+    "daisyui": "^5.5.19"
+  }
+}
