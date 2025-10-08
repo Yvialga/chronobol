@@ -1,0 +1,143 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\TeamRepository;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: TeamRepository::class)]
+class Team
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $paid_registration = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $deposit = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $electric_bike = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $meal_count = null;
+
+    #[ORM\Column]
+    private ?int $member_number = null;
+
+    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+    private ?\DateTime $final_time = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false, name: 'fk_event_id')]
+    private ?Event $fk_event_id = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false, name: 'fk_trail_id')]
+    private ?Trail $fk_trail_id = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function isPaidRegistration(): ?bool
+    {
+        return $this->paid_registration;
+    }
+
+    public function setPaidRegistration(?bool $paid_registration): static
+    {
+        $this->paid_registration = $paid_registration;
+
+        return $this;
+    }
+
+    public function isDeposit(): ?bool
+    {
+        return $this->deposit;
+    }
+
+    public function setDeposit(?bool $deposit): static
+    {
+        $this->deposit = $deposit;
+
+        return $this;
+    }
+
+    public function isElectricBike(): ?bool
+    {
+        return $this->electric_bike;
+    }
+
+    public function setElectricBike(?bool $electric_bike): static
+    {
+        $this->electric_bike = $electric_bike;
+
+        return $this;
+    }
+
+    public function getMealCount(): ?int
+    {
+        return $this->meal_count;
+    }
+
+    public function setMealCount(?int $meal_count): static
+    {
+        $this->meal_count = $meal_count;
+
+        return $this;
+    }
+
+    public function getMemberNumber(): ?int
+    {
+        return $this->member_number;
+    }
+
+    public function setMemberNumber(int $member_number): static
+    {
+        $this->member_number = $member_number;
+
+        return $this;
+    }
+
+    public function getFinalTime(): ?\DateTime
+    {
+        return $this->final_time;
+    }
+
+    public function setFinalTime(?\DateTime $final_time): static
+    {
+        $this->final_time = $final_time;
+
+        return $this;
+    }
+
+    public function getFkEventId(): ?Event
+    {
+        return $this->fk_event_id;
+    }
+
+    public function setFkEventId(?Event $fk_event_id): static
+    {
+        $this->fk_event_id = $fk_event_id;
+
+        return $this;
+    }
+
+    public function getFkTrailId(): ?Trail
+    {
+        return $this->fk_trail_id;
+    }
+
+    public function setFkTrailId(?Trail $fk_trail_id): static
+    {
+        $this->fk_trail_id = $fk_trail_id;
+
+        return $this;
+    }
+}
