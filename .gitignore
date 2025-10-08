@@ -1,0 +1,11 @@
+*.md
+!**/README.md
+
+mysql/
+
+# Secrets
+/.env.local
+/.env.local.php
+/.env.*.local
+/*/secrets.md
+secrets.*.txt
