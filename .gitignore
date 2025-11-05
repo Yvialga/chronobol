@@ -3,6 +3,8 @@
 
 mysql/
 
+.idea/
+
 # Secrets
 /.env.local
 /.env.local.php
