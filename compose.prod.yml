@@ -4,3 +4,56 @@
 # Setting environment variables differently, such as reducing the verbosity of logging, or to specify settings for external services such as an email server
 # Specifying a restart policy like [restart: always] to avoid downtime
 # Adding extra services such as a log aggregator
+
+# TODO : to rewrite for prod
+
+services:
+  database:
+    container_name: database
+    image: yobasystems/alpine-mariadb
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_INIT_ONLY: "false"
+    ports:
+     - 4306:3306
+    volumes:
+      - ./mysql:/var/lib/mysql
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./php
+    env_file:
+      - .env.local
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    ports:
+      - 8080:80
+    volumes:
+      - ./apache/default.conf:/etc/apache2/sites-enabled/000-default.conf
+      - ./app:/var/www
+    depends_on:
+      - database
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: database
+      PMA_USER: ${DB_USER}
+      PMA_PASSWORD: ${DB_PASSWORD}
+      UPLOAD_LIMIT: 20M
+      APACHE_SERVERNAME: localhost
+    ports:
+      - 8888:80
+
+volumes:
+  mysql:

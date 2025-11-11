@@ -25,10 +25,6 @@ class Event
     #[ORM\Column(length: 255)]
     private ?string $event_slug = null;
 
-    #[ORM\ManyToOne(inversedBy: 'fk_event_id')]
-    #[ORM\JoinColumn(nullable: false, name: 'fk_space_id')]
-    private ?Space $fk_space_id = null;
-
     /**
      * @var Collection<int, Trail>
      */
@@ -77,18 +73,6 @@ class Event
     public function setEventSlug(string $event_slug): static
     {
         $this->event_slug = $event_slug;
-
-        return $this;
-    }
-
-    public function getFkSpaceId(): ?Space
-    {
-        return $this->fk_space_id;
-    }
-
-    public function setFkSpaceId(?Space $fk_space_id): static
-    {
-        $this->fk_space_id = $fk_space_id;
 
         return $this;
     }
