@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Event;
-use App\Entity\Space;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,10 +16,6 @@ class EventForm extends AbstractType
             ->add('event_name')
             ->add('event_date')
             ->add('event_slug')
-            ->add('fk_space_id', EntityType::class, [
-                'class' => Space::class,
-                'choice_label' => 'id',
-            ])
         ;
     }
 

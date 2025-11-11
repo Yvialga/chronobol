@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\Space;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -42,10 +41,6 @@ class UserForm extends AbstractType
                         'max' => 100,
                     ]),
                 ],
-            ])
-            ->add('fk_space_name', EntityType::class, [
-                'class' => Space::class,
-                'choice_label' => 'id',
             ])
         ;
         $builder->get('roles')

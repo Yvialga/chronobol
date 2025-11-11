@@ -33,9 +33,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\ManyToOne(Space::class)]
-    #[ORM\JoinColumn(name: 'fk_space_name')]
-    private ?Space $fk_space_name = null;
 
     public function getId(): ?int
     {
@@ -108,17 +105,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
-    }
-
-    public function getFkSpaceName(): ?Space
-    {
-        return $this->fk_space_name;
-    }
-
-    public function setFkSpaceName(?Space $fk_space_name): self
-    {
-        $this->fk_space_name = $fk_space_name;
-
-        return $this;
     }
 }

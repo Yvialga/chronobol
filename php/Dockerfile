@@ -1,7 +1,7 @@
 FROM php:8.4-apache
 
 RUN apt-get update \
-    && apt-get install -y zlib1g-dev g++ git libicu-dev zip libzip-dev \
+    && apt-get install -y curl zlib1g-dev g++ git libicu-dev zip libzip-dev \
     && docker-php-ext-install intl opcache pdo pdo_mysql \
     && pecl install apcu \
     && docker-php-ext-enable apcu \
