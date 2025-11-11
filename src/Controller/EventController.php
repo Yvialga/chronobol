@@ -14,17 +14,17 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/bol', name: 'app_event_')]
 final class EventController extends AbstractController
 {
-    #[Route(name: 'app_event_home', methods: ['GET'])]
+    #[Route(name: 'home', methods: ['GET'])]
     public function index(EventRepository $eventRepository): Response
     {
-        // LATER : récupérer seulement les events du espace de l'utilisateur actuellement connecté
+        // TODO LATER : récupérer seulement les events du espace de l'utilisateur actuellement connecté
 
         return $this->render('event/index.html.twig', [
             'events' => $eventRepository->findAll(),
         ]);
     }
 
-    #[Route('/nouveau', name: 'app_event_new', methods: ['GET', 'POST'])]
+    #[Route('/nouveau', name: 'new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $event = new Event();
@@ -35,7 +35,7 @@ final class EventController extends AbstractController
             $entityManager->persist($event);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_event_home', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('home', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('event/new.html.twig', [
@@ -44,7 +44,7 @@ final class EventController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}-{id}', name: 'app_event_show', methods: ['GET'])]
+    #[Route('/{slug}-{id}', name: 'show', methods: ['GET'])]
     public function show(Event $event): Response
     {
         return $this->render('event/show.html.twig', [
@@ -52,7 +52,7 @@ final class EventController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_event_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Event $event, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(EventForm::class, $event);
@@ -70,7 +70,7 @@ final class EventController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_event_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'delete', methods: ['POST'])]
     public function delete(Request $request, Event $event, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$event->getId(), $request->getPayload()->getString('_token'))) {
