@@ -50,8 +50,7 @@ final class EventControllerTest extends WebTestCase
         $this->client->submitForm('Save', [
             'event[event_name]' => 'Testing',
             'event[event_date]' => 'Testing',
-            'event[event_slug]' => 'Testing',
-            'event[fk_space_id]' => 'Testing',
+            'event[event_slug]' => 'Testing'
         ]);
 
         self::assertResponseRedirects($this->path);
@@ -66,7 +65,6 @@ final class EventControllerTest extends WebTestCase
         $fixture->setEvent_name('My Title');
         $fixture->setEvent_date('My Title');
         $fixture->setEvent_slug('My Title');
-        $fixture->setFk_space_id('My Title');
 
         $this->manager->persist($fixture);
         $this->manager->flush();
@@ -86,7 +84,6 @@ final class EventControllerTest extends WebTestCase
         $fixture->setEvent_name('Value');
         $fixture->setEvent_date('Value');
         $fixture->setEvent_slug('Value');
-        $fixture->setFk_space_id('Value');
 
         $this->manager->persist($fixture);
         $this->manager->flush();
@@ -97,7 +94,6 @@ final class EventControllerTest extends WebTestCase
             'event[event_name]' => 'Something New',
             'event[event_date]' => 'Something New',
             'event[event_slug]' => 'Something New',
-            'event[fk_space_id]' => 'Something New',
         ]);
 
         self::assertResponseRedirects('/event/');
@@ -107,7 +103,6 @@ final class EventControllerTest extends WebTestCase
         self::assertSame('Something New', $fixture[0]->getEvent_name());
         self::assertSame('Something New', $fixture[0]->getEvent_date());
         self::assertSame('Something New', $fixture[0]->getEvent_slug());
-        self::assertSame('Something New', $fixture[0]->getFk_space_id());
     }
 
     public function testRemove(): void
@@ -117,7 +112,6 @@ final class EventControllerTest extends WebTestCase
         $fixture->setEvent_name('Value');
         $fixture->setEvent_date('Value');
         $fixture->setEvent_slug('Value');
-        $fixture->setFk_space_id('Value');
 
         $this->manager->persist($fixture);
         $this->manager->flush();
