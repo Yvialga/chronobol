@@ -25,13 +25,19 @@ cd ..
 ```bash
 docker-compose up -d
 ```
+
+3. Lancer symfony en local. Le chargement à chaque modification par docker étant trop long.
+```bash
+symfony serve
+```
+
 3. voir ses modifications en cas de changements CSS
 ```bash
 cd app/
 npm run watch
 ```
 
-### Mettre à jour la codebase
+### Mettre à jour les dépendances codebase
 ```bash
 cd app/
 composer update
