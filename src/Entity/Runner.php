@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
+use App\Enum\CategoryEnum;
+use App\Enum\StatusEnum;
 use App\Repository\RunnerRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: RunnerRepository::class)]
 class Runner
 {
@@ -20,16 +23,19 @@ class Runner
     #[ORM\Column(length: 100)]
     private ?string $lastname = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?int $age = null;
 
-    #[ORM\Column(type: Types::SMALLINT)]
+    #[ORM\Column(enumType: CategoryEnum::class)]
     private ?int $gender = null;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $email = null;
+
+    #[ORM\Column(index: true)]
     private ?int $bib_number = null;
 
-    #[ORM\Column(type: Types::BIGINT, nullable: true, unique: true)]
+    #[ORM\Column(type: Types::BIGINT, nullable: true, unique: true, index: true)]
     private ?string $chip_id = null;
 
     #[ORM\Column]
@@ -38,21 +44,31 @@ class Runner
     #[ORM\Column]
     private ?bool $is_underage = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?bool $license = null;
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $medical_certificate = null;
 
     #[ORM\Column]
-    private ?bool $medical_certificate = null;
-
-    #[ORM\Column(nullable: true)]
     private ?bool $parentale_consent = null;
 
-    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTime $personal_time = null;
+
+    #[ORM\Column]
+    private ?bool $is_validate = null;
+
+    #[ORM\Column(enumType: StatusEnum::class)]
+    private ?string $status = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $created_at = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updated_at = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false, name: 'fk_team_id')]
     private ?Team $fk_team_id = null;
+
 
     public function getId(): ?int
     {
@@ -155,18 +171,6 @@ class Runner
         return $this;
     }
 
-    public function isLicense(): ?bool
-    {
-        return $this->license;
-    }
-
-    public function setLicense(?bool $license): static
-    {
-        $this->license = $license;
-
-        return $this;
-    }
-
     public function isMedicalCertificate(): ?bool
     {
         return $this->medical_certificate;
@@ -201,6 +205,65 @@ class Runner
         $this->personal_time = $personal_time;
 
         return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    #[ORM\PrePersist]
+    public function setCreatedAt(): static
+    {
+        $this->created_at = new \DateTimeImmutable();
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updated_at): static
+    {
+        $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function isValidate(): ?bool
+    {
+        return $this->is_validate;
+    }
+
+    public function setIsValidate(bool $is_validate): static
+    {
+        $this->is_validate = $is_validate;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): void
+    {
+        $this->status = $status;
     }
 
     public function getFkTeamId(): ?Team
