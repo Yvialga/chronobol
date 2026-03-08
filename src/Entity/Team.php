@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
+use App\Enum\CategoryEnum;
 use App\Repository\TeamRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: TeamRepository::class)]
 class Team
 {
@@ -14,27 +16,32 @@ class Team
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(enumType: CategoryEnum::class)]
+    private ?int $category = null;
+
+    #[ORM\Column]
     private ?bool $paid_registration = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTime $final_time = null;
+
+    #[ORM\Column]
     private ?bool $deposit = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column]
     private ?bool $electric_bike = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column]
     private ?int $meal_count = null;
 
     #[ORM\Column]
     private ?int $member_number = null;
 
-    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
-    private ?\DateTime $final_time = null;
+    #[ORM\Column]
+    private ?\DateTimeImmutable $created_at = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false, name: 'fk_event_id')]
-    private ?Event $fk_event_id = null;
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updated_at = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false, name: 'fk_trail_id')]
@@ -113,6 +120,31 @@ class Team
     public function setFinalTime(?\DateTime $final_time): static
     {
         $this->final_time = $final_time;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    #[ORM\PrePersist]
+    public function setCreatedAt(): static
+    {
+        $this->created_at = new \DateTimeImmutable();
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updated_at): static
+    {
+        $this->updated_at = $updated_at;
 
         return $this;
     }
