@@ -13,7 +13,7 @@
 ## Étapes pour exécuter le projet en local
 1. Cloner le repository
 ```bash
-git clone https://github.com/your_username/chronobol.git
+git clone https://github.com/yvialga/chronobol.git
 ```
 2. Installer les dépendances
 ```bash

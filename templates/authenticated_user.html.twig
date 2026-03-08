@@ -1,0 +1,46 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+        <div class="drawer lg:drawer-open">
+            <input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
+            <div class="drawer-content">
+                <header class="flex w-full justify-between py-2 bg-blue-900 items-center pl-2 pr-6">
+                    <div>
+                        <label for="my-drawer-4" aria-label="open sidebar" class="btn drawer-button btn-square btn-ghost lg:hidden">
+                            <!-- Sidebar toggle icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor" class="text-white my-1.5 inline-block size-6">
+                                <path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>
+                                <path d="M9 4v16"></path>
+                                <path d="M14 10l2 2l-2 2"></path>
+                            </svg>
+                        </label>
+                    </div>
+                    <strong class="text-lg text-white">ChronoBol</strong>
+                    <div class="flex gap-x-2 text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-user-round-icon lucide-circle-user-round">
+                            <path d="M18 20a6 6 0 0 0-12 0"/><circle cx="12" cy="10" r="4"/><circle cx="12" cy="12" r="10"/>
+                        </svg>
+                        <p>{{ app.user.username }}</p>
+                    </div>
+                </header>
+                {%  block main %}{% endblock %}
+            </div>
+
+            <div class="drawer-side ">
+                <label for="my-drawer-4" aria-label="close sidebar" class="drawer-overlay"></label>
+                <div class="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-14 is-drawer-open:w-64">
+                    <!-- Sidebar content here -->
+                    <ul class="menu w-full grow">
+                        {##}
+                        <li>
+                            <button class="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="The_Page">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendars-icon lucide-calendars"><path d="M12 2v2"/><path d="M15.726 21.01A2 2 0 0 1 14 22H4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2"/><path d="M18 2v2"/><path d="M2 13h2"/><path d="M8 8h14"/><rect x="8" y="3" width="14" height="14" rx="2"/></svg>
+                                <span class="is-drawer-close:hidden">The_Page</span>
+                            </button>
+                        </li>
+                        {#  #}
+                    </ul>
+                </div>
+            </div>
+        </div>
+{% endblock %}

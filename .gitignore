@@ -5,6 +5,8 @@ mysql/
 
 .idea/
 secrets.*.txt
+# Private resources
+/resources/
 
 ###> symfony/framework-bundle ###
 /.env.local
@@ -34,3 +36,8 @@ node_modules/
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+###> symfony/asset-mapper ###
+/public/assets/
+/assets/vendor/
+###< symfony/asset-mapper ###
