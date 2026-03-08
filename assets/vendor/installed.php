@@ -19,4 +19,24 @@
     array (
     ),
   ),
+  'daisyui' => 
+  array (
+    'version' => '5.5.16',
+    'dependencies' => 
+    array (
+    ),
+    'extraFiles' => 
+    array (
+    ),
+  ),
+  'daisyui/daisyui.min.css' => 
+  array (
+    'version' => '5.5.16',
+    'dependencies' => 
+    array (
+    ),
+    'extraFiles' => 
+    array (
+    ),
+  ),
 );
