@@ -1,5 +1,9 @@
 @import "tailwindcss";
+@source not "../../public";
+@plugin "daisyui" {
+    themes: light --default;
+}
 
 body {
-    background-color: oklch(86.9% 0.005 56.366);
+    background-color: oklch(96.7% 0.003 264.542);
 }
