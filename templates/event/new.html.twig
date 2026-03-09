@@ -1,8 +1,8 @@
-{% extends 'base.html.twig' %}
+{% extends 'authenticated_user.html.twig' %}
 
 {% block title %}Nouvel évènement{% endblock %}
 
-{% block body %}
+{% block main %}
     <h1>Créer un nouvel évènement</h1>
 
     {{ include('event/_form.html.twig') }}
