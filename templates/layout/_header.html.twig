@@ -1,0 +1,20 @@
+{% block header %}
+    {# comporte logo club + menu utilisateur #}
+    <header class="flex w-full justify-between px-4 bg-blue-900 items-center py-2">
+        <label for="my-drawer-4" aria-label="open sidebar" class="btn btn-square btn-ghost">
+            <!-- Sidebar toggle icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor" class="text-white my-1.5 inline-block size-6">
+                <path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>
+                <path d="M9 4v16"></path>
+                <path d="M14 10l2 2l-2 2"></path>
+            </svg>
+        </label>
+        <strong class="text-lg text-white">ChronoBol</strong>
+        <div class="flex gap-x-2 text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-user-round-icon lucide-circle-user-round">
+                <path d="M18 20a6 6 0 0 0-12 0"/><circle cx="12" cy="10" r="4"/><circle cx="12" cy="12" r="10"/>
+            </svg>
+            <p>{{ app.user.username }}</p>
+        </div>
+    </header>
+{% endblock  %}
