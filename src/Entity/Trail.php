@@ -37,6 +37,8 @@ class Trail
     private ?Event $fk_event_id = null;
 
     #[ORM\ManyToOne]
+    #[ORM\JoinColumn(name: 'fk_trail_template_id')] /* To set the name of foreign key in the database, nullable: true,
+                                                       because does not necessarily depend on TrailTemplate */
     private ?TrailTemplate $fk_trail_template_id = null;
 
     public function getId(): ?int
