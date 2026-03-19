@@ -11,14 +11,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/bol', name: 'app_event_')]
+#[Route('/event', name: 'app_event_')]
 final class EventController extends AbstractController
 {
     #[Route(name: 'home', methods: ['GET'])]
     public function index(EventRepository $eventRepository): Response
     {
-        // TODO LATER : récupérer seulement les events du espace de l'utilisateur actuellement connecté
-
         return $this->render('event/index.html.twig', [
             'events' => $eventRepository->findAll(),
         ]);
