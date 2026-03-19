@@ -100,7 +100,7 @@ class Event
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(?\DateTime $updated_at): void
+    public function setUpdatedAt(?\DateTimeImmutable $updated_at): void
     {
         $this->updated_at = $updated_at;
     }
