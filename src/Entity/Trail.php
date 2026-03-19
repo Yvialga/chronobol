@@ -36,7 +36,7 @@ class Trail
     #[ORM\JoinColumn(nullable: false, name: 'fk_event_id')]
     private ?Event $fk_event_id = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne]
     private ?TrailTemplate $fk_trail_template_id = null;
 
     public function getId(): ?int
@@ -64,18 +64,6 @@ class Trail
     public function setStartTime(?\DateTime $start_time): static
     {
         $this->start_time = $start_time;
-
-        return $this;
-    }
-
-    public function getFkEventId(): ?Event
-    {
-        return $this->fk_event_id;
-    }
-
-    public function setFkEventId(?Event $fk_event_id): static
-    {
-        $this->fk_event_id = $fk_event_id;
 
         return $this;
     }
@@ -112,6 +100,18 @@ class Trail
     public function setUpdatedAt(\DateTimeImmutable $updated_at): static
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getFkEventId(): ?Event
+    {
+        return $this->fk_event_id;
+    }
+
+    public function setFkEventId(?Event $fk_event_id): static
+    {
+        $this->fk_event_id = $fk_event_id;
 
         return $this;
     }
