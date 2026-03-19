@@ -42,7 +42,7 @@ final class EventController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}-{id}', name: 'show', methods: ['GET'])]
+    #[Route('/{slug}-{id}', name: 'show', requirements: ['slug' => '[a-zA-Z0-9\-_\/]+'], methods: ['GET'])]
     public function show(Event $event): Response
     {
         return $this->render('event/show.html.twig', [
