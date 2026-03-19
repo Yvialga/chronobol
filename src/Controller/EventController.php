@@ -11,14 +11,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/bol', name: 'app_event_')]
+#[Route('/event', name: 'app_event_')]
 final class EventController extends AbstractController
 {
     #[Route(name: 'home', methods: ['GET'])]
     public function index(EventRepository $eventRepository): Response
     {
-        // TODO LATER : récupérer seulement les events du espace de l'utilisateur actuellement connecté
-
         return $this->render('event/index.html.twig', [
             'events' => $eventRepository->findAll(),
         ]);
@@ -44,7 +42,7 @@ final class EventController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}-{id}', name: 'show', methods: ['GET'])]
+    #[Route('/{slug}-{id}', name: 'show', requirements: ['slug' => '[a-zA-Z0-9\-_\/]+'], methods: ['GET'])]
     public function show(Event $event): Response
     {
         return $this->render('event/show.html.twig', [

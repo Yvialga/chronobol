@@ -20,7 +20,7 @@ security:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
-                default_target_path: /bol
+                default_target_path: /event
             logout:
                 path: app_logout
                 # where to redirect after logout
@@ -34,7 +34,7 @@ security:
     
     access_control:
         - { path: /controle, roles: ROLE_ADMIN }
-        - { path: /bol, roles: ROLE_USER }
+        - { path: /event, roles: ROLE_USER }
 
 when@test:
     security:
