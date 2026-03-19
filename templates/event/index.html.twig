@@ -8,22 +8,20 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Nom de la compétition</th>
                 <th>Date</th>
-                <th>"slug"</th>
+                <th>slug</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for event in events %}
             <tr>
-                <td>{{ event.id }}</td>
-                <td>{{ event.eventName }}</td>
-                <td>{{ event.eventDate ? event.eventDate|date('Y-m-d') : '' }}</td>
-                <td>{{ event.eventSlug }}</td>
+                <td>{{ event.name }}</td>
+                <td>{{ event.date ? event.date|date('Y-m-d') : '' }}</td>
+                <td>{{ event.slug }}</td>
                 <td>
-                    <a href="{{ path('app_event_show', {'slug': event.eventSlug, 'id': event.id}) }}">Afficher</a>
+                    <a href="{{ path('app_event_show', {'slug': event.slug, 'id': event.id}) }}">Afficher</a>
                     <a href="{{ path('app_event_edit', {'id': event.id}) }}">Modifier</a>
                 </td>
             </tr>
