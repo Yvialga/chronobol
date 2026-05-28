@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\TrailTemplateRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: TrailTemplateRepository::class)]
 class TrailTemplate
 {
@@ -74,6 +75,7 @@ class TrailTemplate
         return $this->created_at;
     }
 
+    #[ORM\PrePersist]
     public function setCreatedAt(\DateTimeImmutable $created_at): static
     {
         $this->created_at = $created_at;

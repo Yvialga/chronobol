@@ -17,19 +17,19 @@ class Team
     private ?int $id = null;
 
     #[ORM\Column(enumType: CategoryEnum::class)]
-    private ?int $category = null;
+    private ?CategoryEnum $category = null;
 
     #[ORM\Column]
-    private ?bool $paid_registration = null;
+    private bool $paid_registration = false;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTime $final_time = null;
 
     #[ORM\Column]
-    private ?bool $deposit = null;
+    private bool $deposit = false;
 
     #[ORM\Column]
-    private ?bool $electric_bike = null;
+    private bool $electric_bike = false;
 
     #[ORM\Column]
     private ?int $meal_count = null;
@@ -44,7 +44,7 @@ class Team
     private ?\DateTimeImmutable $updated_at = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false, name: 'fk_trail_id')]
+    #[ORM\JoinColumn(name: 'fk_trail_id', nullable: false)]
     private ?Trail $fk_trail_id = null;
 
     public function getId(): ?int
@@ -52,36 +52,48 @@ class Team
         return $this->id;
     }
 
-    public function isPaidRegistration(): ?bool
+    public function getCategory(): ?CategoryEnum
+    {
+        return $this->category;
+    }
+
+    public function setCategory(CategoryEnum $category): static
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function isPaidRegistration(): bool
     {
         return $this->paid_registration;
     }
 
-    public function setPaidRegistration(?bool $paid_registration): static
+    public function setPaidRegistration(bool $paid_registration): static
     {
         $this->paid_registration = $paid_registration;
 
         return $this;
     }
 
-    public function isDeposit(): ?bool
+    public function isDeposit(): bool
     {
         return $this->deposit;
     }
 
-    public function setDeposit(?bool $deposit): static
+    public function setDeposit(bool $deposit): static
     {
         $this->deposit = $deposit;
 
         return $this;
     }
 
-    public function isElectricBike(): ?bool
+    public function isElectricBike(): bool
     {
         return $this->electric_bike;
     }
 
-    public function setElectricBike(?bool $electric_bike): static
+    public function setElectricBike(bool $electric_bike): static
     {
         $this->electric_bike = $electric_bike;
 
@@ -145,18 +157,6 @@ class Team
     public function setUpdatedAt(\DateTimeImmutable $updated_at): static
     {
         $this->updated_at = $updated_at;
-
-        return $this;
-    }
-
-    public function getFkEventId(): ?Event
-    {
-        return $this->fk_event_id;
-    }
-
-    public function setFkEventId(?Event $fk_event_id): static
-    {
-        $this->fk_event_id = $fk_event_id;
 
         return $this;
     }

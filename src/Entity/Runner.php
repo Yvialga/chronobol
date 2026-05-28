@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Enum\CategoryEnum;
+use App\Enum\GenderEnum;
 use App\Enum\StatusEnum;
 use App\Repository\RunnerRepository;
 use Doctrine\DBAL\Types\Types;
@@ -23,11 +23,11 @@ class Runner
     #[ORM\Column(length: 100)]
     private ?string $lastname = null;
 
-    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-    private ?int $age = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $age = null;
 
-    #[ORM\Column(enumType: CategoryEnum::class)]
-    private ?int $gender = null;
+    #[ORM\Column(enumType: GenderEnum::class)]
+    private ?GenderEnum $gender = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $email = null;
@@ -35,29 +35,29 @@ class Runner
     #[ORM\Column(index: true)]
     private ?int $bib_number = null;
 
-    #[ORM\Column(type: Types::BIGINT, nullable: true, unique: true, index: true)]
+    #[ORM\Column(type: Types::BIGINT, unique: true, nullable: true, index: true)]
     private ?string $chip_id = null;
 
     #[ORM\Column]
-    private ?bool $is_captain = null;
+    private bool $is_captain = false;
 
     #[ORM\Column]
-    private ?bool $is_underage = null;
+    private bool $is_underage = false;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $medical_certificate = null;
 
     #[ORM\Column]
-    private ?bool $parentale_consent = null;
+    private bool $parental_consent = false;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTime $personal_time = null;
 
     #[ORM\Column]
-    private ?bool $is_validate = null;
+    private bool $is_validate = false;
 
     #[ORM\Column(enumType: StatusEnum::class)]
-    private ?string $status = null;
+    private ?StatusEnum $status = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
@@ -66,7 +66,7 @@ class Runner
     private ?\DateTimeImmutable $updated_at = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false, name: 'fk_team_id')]
+    #[ORM\JoinColumn(name: 'fk_team_id', nullable: false)]
     private ?Team $fk_team_id = null;
 
 
@@ -99,24 +99,24 @@ class Runner
         return $this;
     }
 
-    public function getAge(): ?int
+    public function getAge(): ?\DateTimeImmutable
     {
         return $this->age;
     }
 
-    public function setAge(int $age): static
+    public function setAge(\DateTimeImmutable $age): static
     {
         $this->age = $age;
 
         return $this;
     }
 
-    public function getGender(): ?int
+    public function getGender(): ?GenderEnum
     {
         return $this->gender;
     }
 
-    public function setGender(int $gender): static
+    public function setGender(GenderEnum $gender): static
     {
         $this->gender = $gender;
 
@@ -147,7 +147,7 @@ class Runner
         return $this;
     }
 
-    public function isCaptain(): ?bool
+    public function isCaptain(): bool
     {
         return $this->is_captain;
     }
@@ -159,7 +159,7 @@ class Runner
         return $this;
     }
 
-    public function isUnderage(): ?bool
+    public function isUnderage(): bool
     {
         return $this->is_underage;
     }
@@ -171,7 +171,7 @@ class Runner
         return $this;
     }
 
-    public function isMedicalCertificate(): ?bool
+    public function isMedicalCertificate(): bool
     {
         return $this->medical_certificate;
     }
@@ -183,14 +183,14 @@ class Runner
         return $this;
     }
 
-    public function isParentaleConsent(): ?bool
+    public function isParentalConsent(): bool
     {
-        return $this->parentale_consent;
+        return $this->parental_consent;
     }
 
-    public function setParentaleConsent(?bool $parentale_consent): static
+    public function setParentalConsent(bool $parental_consent): static
     {
-        $this->parentale_consent = $parentale_consent;
+        $this->parental_consent = $parental_consent;
 
         return $this;
     }
@@ -244,7 +244,7 @@ class Runner
         return $this;
     }
 
-    public function isValidate(): ?bool
+    public function isValidate(): bool
     {
         return $this->is_validate;
     }
@@ -256,12 +256,12 @@ class Runner
         return $this;
     }
 
-    public function getStatus(): ?string
+    public function getStatus(): ?StatusEnum
     {
         return $this->status;
     }
 
-    public function setStatus(?string $status): void
+    public function setStatus(?StatusEnum $status): void
     {
         $this->status = $status;
     }
