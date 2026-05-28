@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
 {
@@ -17,23 +18,29 @@ class Event
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $event_name = null;
+    private ?string $name = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $event_date = null;
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTime $date = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $event_slug = null;
+    private ?string $slug = null;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $created_at = null;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $updated_at = null;
 
     /**
      * @var Collection<int, Trail>
      */
     #[ORM\OneToMany(targetEntity: Trail::class, mappedBy: 'fk_event_id')]
-    private Collection $event_trail_id;
+    private Collection $fk_trail_id;
 
     public function __construct()
     {
-        $this->event_trail_id = new ArrayCollection();
+        $this->fk_trail_id = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -41,54 +48,75 @@ class Event
         return $this->id;
     }
 
-    public function getEventName(): ?string
+    public function getName(): ?string
     {
-        return $this->event_name;
+        return $this->name;
     }
 
-    public function setEventName(string $event_name): static
+    public function setName(string $name): static
     {
-        $this->event_name = $event_name;
+        $this->name = $name;
 
         return $this;
     }
 
-    public function getEventDate(): ?\DateTime
+    public function getDate(): ?\DateTime
     {
-        return $this->event_date;
+        return $this->date;
     }
 
-    public function setEventDate(\DateTime $event_date): static
+    public function setDate(\DateTime $date): static
     {
-        $this->event_date = $event_date;
+        $this->date = $date;
 
         return $this;
     }
 
-    public function getEventSlug(): ?string
+    public function getSlug(): ?string
     {
-        return $this->event_slug;
+        return $this->slug;
     }
 
-    public function setEventSlug(string $event_slug): static
+    public function setSlug(string $slug): static
     {
-        $this->event_slug = $event_slug;
+        $this->slug = $slug;
 
         return $this;
+    }
+
+    public function getCreatedAt(): \DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    #[ORM\PrePersist]
+    public function setCreatedAt(): void
+    {
+        $this->created_at = new \DateTimeImmutable();
+    }
+
+    public function getUpdatedAt(): \DateTimeImmutable
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updated_at): void
+    {
+        $this->updated_at = $updated_at;
     }
 
     /**
      * @return Collection<int, Trail>
      */
-    public function getEventTrailId(): Collection
+    public function getFkTrailId(): Collection
     {
-        return $this->event_trail_id;
+        return $this->fk_trail_id;
     }
 
     public function addEventTrailId(Trail $eventTrailId): static
     {
-        if (!$this->event_trail_id->contains($eventTrailId)) {
-            $this->event_trail_id->add($eventTrailId);
+        if (!$this->fk_trail_id->contains($eventTrailId)) {
+            $this->fk_trail_id->add($eventTrailId);
             $eventTrailId->setFkEventId($this);
         }
 
@@ -97,7 +125,7 @@ class Event
 
     public function removeEventTrailId(Trail $eventTrailId): static
     {
-        if ($this->event_trail_id->removeElement($eventTrailId)) {
+        if ($this->fk_trail_id->removeElement($eventTrailId)) {
             // set the owning side to null (unless already changed)
             if ($eventTrailId->getFkEventId() === $this) {
                 $eventTrailId->setFkEventId(null);
@@ -106,4 +134,5 @@ class Event
 
         return $this;
     }
+
 }

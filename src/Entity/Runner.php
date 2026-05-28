@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
+use App\Enum\GenderEnum;
+use App\Enum\StatusEnum;
 use App\Repository\RunnerRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: RunnerRepository::class)]
 class Runner
 {
@@ -20,39 +23,52 @@ class Runner
     #[ORM\Column(length: 100)]
     private ?string $lastname = null;
 
-    #[ORM\Column]
-    private ?int $age = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $age = null;
 
-    #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $gender = null;
+    #[ORM\Column(enumType: GenderEnum::class)]
+    private ?GenderEnum $gender = null;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $email = null;
+
+    #[ORM\Column(index: true)]
     private ?int $bib_number = null;
 
-    #[ORM\Column(type: Types::BIGINT, nullable: true, unique: true)]
+    #[ORM\Column(type: Types::BIGINT, unique: true, nullable: true, index: true)]
     private ?string $chip_id = null;
 
     #[ORM\Column]
-    private ?bool $is_captain = null;
+    private bool $is_captain = false;
 
     #[ORM\Column]
-    private ?bool $is_underage = null;
+    private bool $is_underage = false;
 
-    #[ORM\Column(nullable: true)]
-    private ?bool $license = null;
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $medical_certificate = null;
 
     #[ORM\Column]
-    private ?bool $medical_certificate = null;
+    private bool $parental_consent = false;
 
-    #[ORM\Column(nullable: true)]
-    private ?bool $parentale_consent = null;
-
-    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTime $personal_time = null;
 
+    #[ORM\Column]
+    private bool $is_validate = false;
+
+    #[ORM\Column(enumType: StatusEnum::class)]
+    private ?StatusEnum $status = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $created_at = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updated_at = null;
+
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false, name: 'fk_team_id')]
+    #[ORM\JoinColumn(name: 'fk_team_id', nullable: false)]
     private ?Team $fk_team_id = null;
+
 
     public function getId(): ?int
     {
@@ -83,24 +99,24 @@ class Runner
         return $this;
     }
 
-    public function getAge(): ?int
+    public function getAge(): ?\DateTimeImmutable
     {
         return $this->age;
     }
 
-    public function setAge(int $age): static
+    public function setAge(\DateTimeImmutable $age): static
     {
         $this->age = $age;
 
         return $this;
     }
 
-    public function getGender(): ?int
+    public function getGender(): ?GenderEnum
     {
         return $this->gender;
     }
 
-    public function setGender(int $gender): static
+    public function setGender(GenderEnum $gender): static
     {
         $this->gender = $gender;
 
@@ -131,7 +147,7 @@ class Runner
         return $this;
     }
 
-    public function isCaptain(): ?bool
+    public function isCaptain(): bool
     {
         return $this->is_captain;
     }
@@ -143,7 +159,7 @@ class Runner
         return $this;
     }
 
-    public function isUnderage(): ?bool
+    public function isUnderage(): bool
     {
         return $this->is_underage;
     }
@@ -155,19 +171,7 @@ class Runner
         return $this;
     }
 
-    public function isLicense(): ?bool
-    {
-        return $this->license;
-    }
-
-    public function setLicense(?bool $license): static
-    {
-        $this->license = $license;
-
-        return $this;
-    }
-
-    public function isMedicalCertificate(): ?bool
+    public function isMedicalCertificate(): bool
     {
         return $this->medical_certificate;
     }
@@ -179,14 +183,14 @@ class Runner
         return $this;
     }
 
-    public function isParentaleConsent(): ?bool
+    public function isParentalConsent(): bool
     {
-        return $this->parentale_consent;
+        return $this->parental_consent;
     }
 
-    public function setParentaleConsent(?bool $parentale_consent): static
+    public function setParentalConsent(bool $parental_consent): static
     {
-        $this->parentale_consent = $parentale_consent;
+        $this->parental_consent = $parental_consent;
 
         return $this;
     }
@@ -201,6 +205,65 @@ class Runner
         $this->personal_time = $personal_time;
 
         return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    #[ORM\PrePersist]
+    public function setCreatedAt(): static
+    {
+        $this->created_at = new \DateTimeImmutable();
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updated_at): static
+    {
+        $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function isValidate(): bool
+    {
+        return $this->is_validate;
+    }
+
+    public function setIsValidate(bool $is_validate): static
+    {
+        $this->is_validate = $is_validate;
+
+        return $this;
+    }
+
+    public function getStatus(): ?StatusEnum
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?StatusEnum $status): void
+    {
+        $this->status = $status;
     }
 
     public function getFkTeamId(): ?Team

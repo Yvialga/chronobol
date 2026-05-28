@@ -1,29 +1,27 @@
-{% extends 'base.html.twig' %}
+{% extends 'authenticated_user.html.twig' %}
 
-{% block title %}Event index{% endblock %}
+{% block title %}Liste des compétitions{% endblock %}
 
-{% block body %}
-    <h1>Event index</h1>
+{% block main %}
+    <h1>Liste des compétitions</h1>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Nom de la compétition</th>
                 <th>Date</th>
-                <th>"slug"</th>
+                <th>slug</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for event in events %}
             <tr>
-                <td>{{ event.id }}</td>
-                <td>{{ event.eventName }}</td>
-                <td>{{ event.eventDate ? event.eventDate|date('Y-m-d') : '' }}</td>
-                <td>{{ event.eventSlug }}</td>
+                <td>{{ event.name }}</td>
+                <td>{{ event.date ? event.date|date('Y-m-d') : '' }}</td>
+                <td>{{ event.slug }}</td>
                 <td>
-                    <a href="{{ path('app_event_show', {'id': event.id}) }}">Afficher</a>
+                    <a href="{{ path('app_event_show', {'slug': event.slug, 'id': event.id}) }}">Afficher</a>
                     <a href="{{ path('app_event_edit', {'id': event.id}) }}">Modifier</a>
                 </td>
             </tr>
