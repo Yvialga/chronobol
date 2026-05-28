@@ -22,7 +22,6 @@ class Trail
     #[ORM\Column(nullable: true)]
     private ?\DateTime $start_time = null;
 
-
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
@@ -33,7 +32,7 @@ class Trail
     private ?\DateTimeImmutable $updated_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'fk_trail_id')]
-    #[ORM\JoinColumn(nullable: false, name: 'fk_event_id')]
+    #[ORM\JoinColumn(name: 'fk_event_id', nullable: false)]
     private ?Event $fk_event_id = null;
 
     #[ORM\ManyToOne]
@@ -87,6 +86,7 @@ class Trail
         return $this->created_at;
     }
 
+    #[ORM\PrePersist]
     public function setCreatedAt(): static
     {
         $this->created_at = new \DateTimeImmutable();
