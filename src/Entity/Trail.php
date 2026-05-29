@@ -26,6 +26,9 @@ class Trail
     private ?string $description = null;
 
     #[ORM\Column]
+    private ?int $member_number = null;
+
+    #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column]
@@ -77,6 +80,18 @@ class Trail
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getMemberNumber(): ?int
+    {
+        return $this->member_number;
+    }
+
+    public function setMemberNumber(int $member_number): static
+    {
+        $this->member_number = $member_number;
 
         return $this;
     }

@@ -35,9 +35,6 @@ class Team
     private ?int $meal_count = null;
 
     #[ORM\Column]
-    private ?int $member_number = null;
-
-    #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column]
@@ -108,18 +105,6 @@ class Team
     public function setMealCount(?int $meal_count): static
     {
         $this->meal_count = $meal_count;
-
-        return $this;
-    }
-
-    public function getMemberNumber(): ?int
-    {
-        return $this->member_number;
-    }
-
-    public function setMemberNumber(int $member_number): static
-    {
-        $this->member_number = $member_number;
 
         return $this;
     }
