@@ -66,7 +66,7 @@ class Runner
     private ?\DateTimeImmutable $updated_at = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(name: 'fk_team_id', nullable: false)]
+    #[ORM\JoinColumn(name: 'fk_team_id', nullable: true)]
     private ?Team $fk_team_id = null;
 
 
