@@ -32,7 +32,7 @@ class Runner
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $email = null;
 
-    #[ORM\Column(index: true)]
+    #[ORM\Column(nullable: true, index: true)]
     private ?int $bib_number = null;
 
     #[ORM\Column(type: Types::BIGINT, unique: true, nullable: true, index: true)]
