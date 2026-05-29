@@ -122,6 +122,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    #[\Deprecated]
     /**
      * @see UserInterface
      */
@@ -129,6 +130,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /* Instead of eraseCredentials */
+    public function __serialize(): array
+    {
+        // TODO: Implement __serialize() method.
     }
 
     public function getCreatedAt(): \DateTimeImmutable
