@@ -27,6 +27,7 @@ class TrailFixtures extends Fixture implements DependentFixtureInterface
             $trail->setName($t[0]);
             $trail->setDescription($t[1]);
             $trail->setStartTime($t[2]);
+            $trail->setMemberNumber(2);
             $trail->setUpdatedAt(new \DateTimeImmutable('now'));
             switch ($i) {
                 case 0:
