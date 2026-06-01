@@ -51,7 +51,6 @@ class TeamFixtures extends Fixture implements DependentFixtureInterface
         for ($i = 0; $i < count($trails) ; $i++) {
             $team = new Team();
             $team->setMealCount($faker->numberBetween(2, 6));
-            $team->setMemberNumber(2);
             $team->setUpdatedAt(new \DateTimeImmutable('now'));
 
             // Definition of categories :

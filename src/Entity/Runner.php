@@ -32,7 +32,7 @@ class Runner
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $email = null;
 
-    #[ORM\Column(index: true)]
+    #[ORM\Column(nullable: true, index: true)]
     private ?int $bib_number = null;
 
     #[ORM\Column(type: Types::BIGINT, unique: true, nullable: true, index: true)]
@@ -66,7 +66,7 @@ class Runner
     private ?\DateTimeImmutable $updated_at = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(name: 'fk_team_id', nullable: false)]
+    #[ORM\JoinColumn(name: 'fk_team_id', nullable: true)]
     private ?Team $fk_team_id = null;
 
 
