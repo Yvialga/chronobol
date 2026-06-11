@@ -19,8 +19,8 @@ class Trail
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTime $start_time = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE ,nullable: true)]
+    private ?\DateTimeImmutable $start_time = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
@@ -60,12 +60,12 @@ class Trail
         return $this;
     }
 
-    public function getStartTime(): ?\DateTime
+    public function getStartTime(): ?\DateTimeImmutable
     {
         return $this->start_time;
     }
 
-    public function setStartTime(?\DateTime $start_time): static
+    public function setStartTime(?\DateTimeImmutable $start_time): static
     {
         $this->start_time = $start_time;
 

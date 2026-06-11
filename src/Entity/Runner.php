@@ -50,8 +50,8 @@ class Runner
     #[ORM\Column]
     private bool $parental_consent = false;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTime $personal_time = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $personal_time = null;
 
     #[ORM\Column]
     private bool $is_validate = false;
@@ -195,7 +195,7 @@ class Runner
         return $this;
     }
 
-    public function getPersonalTime(): ?\DateTime
+    public function getPersonalTime(): \DateTimeImmutable
     {
         return $this->personal_time;
     }
