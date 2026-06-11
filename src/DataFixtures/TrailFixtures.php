@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Event;
 use App\Entity\Trail;
+use App\Enum\RunStateEnum;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -25,8 +26,9 @@ class TrailFixtures extends Fixture implements DependentFixtureInterface
         foreach ($trails as $t) {
             $trail = new Trail();
             $trail->setName($t[0]);
-            $trail->setDescription($t[1]);
             $trail->setStartTime($t[2]);
+            $trail->setRunState(RunStateEnum::PLANNED);
+            $trail->setDescription($t[1]);
             $trail->setMemberNumber(2);
             $trail->setUpdatedAt(new \DateTimeImmutable('now'));
             switch ($i) {
