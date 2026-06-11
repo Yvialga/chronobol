@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\RunStateEnum;
 use App\Repository\TrailRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,8 +20,11 @@ class Trail
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTime $start_time = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE ,nullable: true)]
+    private ?\DateTimeImmutable $start_time = null;
+
+    #[ORM\Column(enumType: RunStateEnum::class)]
+    private ?RunStateEnum $run_state = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
@@ -60,14 +64,26 @@ class Trail
         return $this;
     }
 
-    public function getStartTime(): ?\DateTime
+    public function getStartTime(): ?\DateTimeImmutable
     {
         return $this->start_time;
     }
 
-    public function setStartTime(?\DateTime $start_time): static
+    public function setStartTime(?\DateTimeImmutable $start_time): static
     {
         $this->start_time = $start_time;
+
+        return $this;
+    }
+
+    public function getRunState(): ?RunStateEnum
+    {
+        return $this->run_state;
+    }
+
+    public function setRunState(RunStateEnum $run_state): static
+    {
+        $this->run_state = $run_state;
 
         return $this;
     }

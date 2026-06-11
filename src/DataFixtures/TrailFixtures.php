@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Event;
 use App\Entity\Trail;
+use App\Enum\RunStateEnum;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -17,16 +18,17 @@ class TrailFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $trails = [
-            ["Grand bol", "épreuve sportive de 42km", (new \DateTime())->setTime(8, 0), self::LARGE_BOWL],
-            ["petit bol", "épreuve sportive de 30km", (new \DateTime())->setTime(8, 30), self::SMALL_BOWL],
-            ["Bol découverte", "épreuve sportive de 13km", (new \DateTime())->setTime(9, 0), self::DISCOVERY_BOWL]
+            ["Grand bol", "épreuve sportive de 42km", (new \DateTimeImmutable())->setTime(8, 0), self::LARGE_BOWL],
+            ["petit bol", "épreuve sportive de 30km", (new \DateTimeImmutable())->setTime(8, 30), self::SMALL_BOWL],
+            ["Bol découverte", "épreuve sportive de 13km", (new \DateTimeImmutable())->setTime(9, 0), self::DISCOVERY_BOWL]
         ];
         $i = 0;
         foreach ($trails as $t) {
             $trail = new Trail();
             $trail->setName($t[0]);
-            $trail->setDescription($t[1]);
             $trail->setStartTime($t[2]);
+            $trail->setRunState(RunStateEnum::PLANNED);
+            $trail->setDescription($t[1]);
             $trail->setMemberNumber(2);
             $trail->setUpdatedAt(new \DateTimeImmutable('now'));
             switch ($i) {

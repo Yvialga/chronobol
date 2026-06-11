@@ -22,8 +22,8 @@ class Team
     #[ORM\Column]
     private bool $paid_registration = false;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTime $final_time = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $final_time = null;
 
     #[ORM\Column]
     private bool $deposit = false;
