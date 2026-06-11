@@ -135,7 +135,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /* Instead of eraseCredentials */
     public function __serialize(): array
     {
-        // TODO: Implement __serialize() method.
+        $data = (array) $this;
+        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
+
+        return $data;
     }
 
     public function getCreatedAt(): \DateTimeImmutable
