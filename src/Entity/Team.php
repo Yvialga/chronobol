@@ -109,12 +109,12 @@ class Team
         return $this;
     }
 
-    public function getFinalTime(): ?\DateTime
+    public function getFinalTime(): ?\DateTimeImmutable
     {
         return $this->final_time;
     }
 
-    public function setFinalTime(?\DateTime $final_time): static
+    public function setFinalTime(?\DateTimeImmutable $final_time): static
     {
         $this->final_time = $final_time;
 

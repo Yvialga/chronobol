@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: RunnerRepository::class)]
+#[ORM\Cache(usage: 'NONSTRICT_READ_WRITE', region: 'default')]
 class Runner
 {
     #[ORM\Id]
@@ -200,7 +201,7 @@ class Runner
         return $this->personal_time;
     }
 
-    public function setPersonalTime(?\DateTime $personal_time): static
+    public function setPersonalTime(?\DateTimeImmutable $personal_time): static
     {
         $this->personal_time = $personal_time;
 
