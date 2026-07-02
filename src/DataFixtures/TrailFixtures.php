@@ -18,9 +18,9 @@ class TrailFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $trails = [
-            ["Grand bol", "épreuve sportive de 42km", (new \DateTimeImmutable())->setTime(8, 0), self::LARGE_BOWL],
-            ["petit bol", "épreuve sportive de 30km", (new \DateTimeImmutable())->setTime(8, 30), self::SMALL_BOWL],
-            ["Bol découverte", "épreuve sportive de 13km", (new \DateTimeImmutable())->setTime(9, 0), self::DISCOVERY_BOWL]
+            ["Grand bol", "épreuve sportive de 42km", (new \DateTimeImmutable('now', new \DateTimeZone('UTC')))->setTime(8, 0), self::LARGE_BOWL],
+            ["petit bol", "épreuve sportive de 30km", (new \DateTimeImmutable('now', new \DateTimeZone('UTC')))->setTime(8, 30), self::SMALL_BOWL],
+            ["Bol découverte", "épreuve sportive de 13km", (new \DateTimeImmutable('now', new \DateTimeZone('UTC')))->setTime(9, 0), self::DISCOVERY_BOWL]
         ];
         $i = 0;
         foreach ($trails as $t) {
@@ -30,7 +30,7 @@ class TrailFixtures extends Fixture implements DependentFixtureInterface
             $trail->setRunState(RunStateEnum::PLANNED);
             $trail->setDescription($t[1]);
             $trail->setMemberNumber(2);
-            $trail->setUpdatedAt(new \DateTimeImmutable('now'));
+            $trail->setUpdatedAt(new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
             switch ($i) {
                 case 0:
                     $trail->setFkEventId($this->getReference(EventFixtures::BOL_2026_REFERENCE, Event::class));
