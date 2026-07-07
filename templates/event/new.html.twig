@@ -3,9 +3,11 @@
 {% block title %}Nouvel évènement{% endblock %}
 
 {% block main %}
-    <h1>Créer un nouvel évènement</h1>
+    <section class="m-8">
+        <a href="{{ path('app_event_home') }}" class="underline no:underline text-sm ">Retourner à la liste</a>
+        <h1 class="text-3xl mt-4">Créer un nouvel évènement</h1>
 
-    {{ include('event/_form.html.twig') }}
+        {{ include('event/_form.html.twig') }}
 
-    <a href="{{ path('app_event_home') }}">Retourner à la liste</a>
+    </section>
 {% endblock %}

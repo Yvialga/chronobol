@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 #[Route('/event', name: 'app_event_')]
 final class EventController extends AbstractController
@@ -30,6 +31,10 @@ final class EventController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+//            $event = $form->getData();
+            $slugger = new AsciiSlugger('fr');
+            $createdSlug = (string) $slugger->slug((string) $event->getId() . ' ' . $event->getName())->lower();
+            $event->setSlug($createdSlug);
             $entityManager->persist($event);
             $entityManager->flush();
 
