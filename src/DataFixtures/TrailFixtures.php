@@ -35,6 +35,7 @@ class TrailFixtures extends Fixture implements DependentFixtureInterface
             $manager->persist($trail);
         }
         $manager->flush();
+        $manager->clear();
     }
 
     public function getDependencies(): array
