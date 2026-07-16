@@ -16,4 +16,13 @@ class TrailRepository extends ServiceEntityRepository
         parent::__construct($registry, Trail::class);
     }
 
+    public function findByEvent(string $eventSlug) : array
+    {
+        return $this->createQueryBuilder('t')
+            ->where('t.fk_event_id = :eventSlug')
+            ->setParameter('eventSlug', $eventSlug)
+            ->getQuery()
+            ->getResult();
+    }
+
 }

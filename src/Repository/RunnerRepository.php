@@ -16,5 +16,16 @@ class RunnerRepository extends ServiceEntityRepository
         parent::__construct($registry, Runner::class);
     }
 
-
+    /**
+     * @param int $teamId
+     * @return array<int, Runner>
+     */
+    public function findAllByTeam(int $teamId): array
+    {
+        return $this->createQueryBuilder('runner')
+            ->where('runner.fk_team_id = :teamId')
+            ->setParameter('teamId', $teamId)
+            ->getQuery()
+            ->getResult();
+    }
 }
