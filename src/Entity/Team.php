@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Enum\CategoryEnum;
 use App\Repository\TeamRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -43,6 +45,17 @@ class Team
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(name: 'fk_trail_id', nullable: false)]
     private ?Trail $fk_trail_id = null;
+
+    /**
+     * @var Collection<int, Runner>
+     */
+    #[ORM\OneToMany(targetEntity: Runner::class, mappedBy: 'fk_team_id')]
+    private Collection $runners;
+
+    public function __construct()
+    {
+        $this->runners = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -139,6 +152,7 @@ class Team
         return $this->updated_at;
     }
 
+    #[ORM\PreUpdate]
     public function setUpdatedAt(\DateTimeImmutable $updated_at): static
     {
         $this->updated_at = $updated_at;
@@ -154,6 +168,36 @@ class Team
     public function setFkTrailId(?Trail $fk_trail_id): static
     {
         $this->fk_trail_id = $fk_trail_id;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Runner>
+     */
+    public function getRunners(): Collection
+    {
+        return $this->runners;
+    }
+
+    public function addRunnerId(Runner $runnerId): static
+    {
+        if (!$this->runners->contains($runnerId)) {
+            $this->runners->add($runnerId);
+            $runnerId->setFkTeamId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRunnerId(Runner $runnerId): static
+    {
+        if ($this->runners->removeElement($runnerId)) {
+            // set the owning side to null (unless already changed)
+            if ($runnerId->getFkTeamId() === $this) {
+                $runnerId->setFkTeamId(null);
+            }
+        }
 
         return $this;
     }
