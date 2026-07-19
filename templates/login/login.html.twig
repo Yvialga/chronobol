@@ -4,11 +4,14 @@
 
 {% block body %}
 <main class="flex justify-center items-center w-full min-h-screen ">
-    <div class="{% if app.user %} w-sm {% else %} w-sm {% endif %} p-6 -translate-y-10">
+    <div class="{% if app.user %} w-md {% else %} w-sm {% endif %} p-6 -translate-y-10">
         {% if app.user %}
-            <div class="mb-3 flex flex-col items-center">
-                <p>Vous êtes déjà authentifié en tant que {{ app.user.username }}</p>
-                <a class="underline link-primary hover:no-underline underline-offset-1" href="{{ path('app_logout') }}">Se déconnecter</a>
+            <div class="mb-3 flex flex-col items-center w-full">
+                <p>Vous êtes déjà authentifié en tant que <span class="font-bold">{{ app.user.username }}</span></p>
+                <div class="flex gap-x-4">
+                    <a class="underline link-primary hover:no-underline underline-offset-1" href="{{ path('app_event_home') }}">Accéder à la liste des compétitions</a>
+                    <a class="underline link-error hover:no-underline underline-offset-1" href="{{ path('app_logout') }}">Se déconnecter</a>
+                </div>
             </div>
         {% else %}
         <form method="post" class="flex flex-col gap-6">
