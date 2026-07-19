@@ -10,7 +10,8 @@
 
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
-
+            {# Below, JS code is restricted to a specific page to prevent it from being loaded on all pages that do not use it. #}
+            {% block specificjs %}{% endblock %}
         {% endblock %}
     </head>
     <body class="min-h-screen bg-amber-50">

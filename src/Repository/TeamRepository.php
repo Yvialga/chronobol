@@ -69,4 +69,16 @@ class TeamRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    /**
+     * @param int $fk
+     * @return Team
+     */
+    public function findByFK(Team $fk) : Team
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.id = :fk')
+            ->setParameter('fk', $fk)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

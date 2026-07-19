@@ -196,7 +196,7 @@ class Runner
         return $this;
     }
 
-    public function getPersonalTime(): \DateTimeImmutable
+    public function getPersonalTime(): ?\DateTimeImmutable
     {
         return $this->personal_time;
     }
