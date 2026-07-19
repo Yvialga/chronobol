@@ -9,7 +9,7 @@
         <h1 class="text-center font-bold text-4xl mt-4 mb-12">Vérification des puces</h1>
 
         {{ form_start(form, {
-            action: path('app_event_verif', {id: event.getId()}),
+            action: path('app_event_verif', {slug: event.slug}),
             attr: {
                 class: 'flex justify-center',
                 id: 'form-of-checkin'
