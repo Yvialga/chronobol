@@ -81,4 +81,25 @@ final class CheckInController extends AbstractController
             'event' => $event
         ]);
     }
+
+    #[Route('/{slug}/reset', name: 'reset')]
+    public function reset (#[MapEntity(mapping: ['slug' => 'slug'])] Event $event, TeamRepository $teamRepository, RunnerRepository $runnerRepository, EntityManagerInterface $entityManager)
+    {
+        $allRunners = $runnerRepository->findAll();
+        foreach ($allRunners as $runner) {
+            if ($runner->getPersonalTime()) {
+                $runner->setPersonalTime(null);
+                $entityManager->persist($runner);
+            }
+        }
+        $allTeams = $teamRepository->findAll();
+        foreach ($allTeams as $team) {
+            if ($team->getFinalTime()) {
+                $team->setFinalTime(null);
+                $entityManager->persist($team);
+            }
+        }
+        $entityManager->flush();
+        return $this->redirectToRoute('app_event_checkin', ['slug' => $event->getSlug()]);
+    }
 }
