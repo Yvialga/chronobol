@@ -3,21 +3,29 @@
 {% block title %}Compétition{% endblock %}
 
 {% block main %}
-    <h1>Compétition</h1>
+    <a class="underline hover:no-underline" href="{{ path('app_event_home') }}">Retour à la liste</a>
 
-
-    <p>{{ event.name }}</p>
-    <p>Date {{ event.date ? event.date|date('Y-m-d') : '' }}</p>
+    <div class="flex gap-x-2">
+        <p>Compétition :</p>
+        <h1>{{ event.name }}</h1>
+    </div>
+    <p>Date : {{ event.date ? event.date|date('Y-m-d') : '/' }}</p>
     {% set trails = event.fktrailid %}
     {% if trails %}
         <ul>
             {% for trail in trails %}
-                <li>{{ trail.name }}</li>
+                <li class="first-letter:uppercase">{{ trail.name }}</li>
             {% endfor %}
         </ul>
     {% endif %}
 
-    <a class="underline hover:no-underline" href="{{ path('app_event_home') }}">Retour à la liste</a>
+    <ul class="grid grid-cols-2 grid-rows-2 w-fit">
+        <li class="rounded-sm shadow-md w-min p-2"><a href="{{ path('app_event_verif', {slug: event.slug }) }}">Vérifier un puce</a></li>
+{#        <li><a href="{{ path('app_event_') }}">Gestion des départs</a></li>#}
+        <li class="rounded-sm shadow-md w-min p-2"><a href="{{ path('app_event_checkin', {slug: event.slug}) }}">Pointage</a></li>
+        <li class="rounded-sm shadow-md w-min p-2"><a href="{{ path('app_team_index', {slug: event.slug }) }}">Liste des équipes</a></li>
+        <li class="rounded-sm shadow-md w-min p-2"><a href="{{ path('app_team_new', {slug: event.slug }) }}">Inscrire une équipe</a></li>
+    </ul>
 
     {% if is_granted('ROLE_ADMIN') %}
         <div class="flex">
