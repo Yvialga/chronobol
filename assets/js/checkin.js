@@ -24,11 +24,10 @@ input.addEventListener('keydown', async (e) => {
     if (e.key === 'Enter') enterKeypressedCounter++;
     if (enterKeypressedCounter === 2) {
         /**@type Object*/
-        let runner = await handleScan(buffer);
-        enterKeypressedCounter = 0;
+        handleScan(buffer);
         buffer = '';
         input.value = buffer;
-        handleResult(runner);
+        enterKeypressedCounter = 0;
     }
 });
 
@@ -44,7 +43,7 @@ const handleResult = (runner) => {
 }
 
 const handleScan = async (buffer) => {
-    return fetch(form.action, {
+    let runner = await fetch(form.action, {
         headers: {"Cache-Type": "application/json"},
         method: 'POST',
         body: new FormData(form),
@@ -58,4 +57,6 @@ const handleScan = async (buffer) => {
         .catch((error) => {
             return new Error("Une erreur est survenue.")
         });
+
+    handleResult(runner);
 };

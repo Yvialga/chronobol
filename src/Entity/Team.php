@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Enum\CategoryEnum;
 use App\Repository\TeamRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -153,9 +154,9 @@ class Team
     }
 
     #[ORM\PreUpdate]
-    public function setUpdatedAt(\DateTimeImmutable $updated_at): static
+    public function setUpdatedAt(): static
     {
-        $this->updated_at = $updated_at;
+        $this->updated_at = new DateTimeImmutable('now');
 
         return $this;
     }
