@@ -19,7 +19,11 @@
 
     <a class="underline hover:no-underline" href="{{ path('app_event_home') }}">Retour à la liste</a>
 
-    <a class="underline hover:no-underline" href="{{ path('app_event_edit', {'id': event.id}) }}">Modifier la compétition</a>
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="flex">
+            <a class="btn" href="{{ path('app_event_edit', {'id': event.id}) }}">Modifier la compétition</a>
+            {{ include('event/_delete_form.html.twig') }}
+        </div>
+    {% endif %}
 
-    {{ include('event/_delete_form.html.twig') }}
 {% endblock %}
