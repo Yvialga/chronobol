@@ -29,4 +29,28 @@ final class RankingController extends AbstractController
         ]);
     }
 
+    /* Testing route for filled teams records with time values
+     */
+    #[Route('/event/{slug}/rankup', name: 'app_rankup', env: ['dev', 'test'])]
+    public function rankup(
+        #[MapEntity(mapping: ['slug' => 'slug'])] Event $event,
+        TeamRepository $teamRepository,
+        TrailRepository $trailRepository,
+        EntityManagerInterface $entityManager
+    ): Response
+    {
+        $teams =  $teamRepository->findAllByEvent($event->getId());
+        $minutes = 30;
+        foreach ($teams as $team) {
+            if (!$team->getFinalTime()) {
+                $team->setFinalTime((new \DateTimeImmutable())->setTime(2, $minutes, 41));
+                $minutes += 5;
+            }
+            $entityManager->persist($team);
+        }
+        $entityManager->flush();
+        $entityManager->clear();
+
+        return $this->json('ok', Response::HTTP_OK);
+    }
 }
