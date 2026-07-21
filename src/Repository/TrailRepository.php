@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Event;
 use App\Entity\Runner;
 use App\Entity\Trail;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -17,14 +18,15 @@ class TrailRepository extends ServiceEntityRepository
         parent::__construct($registry, Trail::class);
     }
 
-    public function findByEvent(string $eventSlug) : array
+    public function findByEvent(Event $event) : array
     {
+        $eventId = $event->getId();
+
         return $this->createQueryBuilder('t')
-            ->where('t.fk_event_id = :eventSlug')
-            ->setParameter('eventSlug', $eventSlug)
+            ->where('t.fk_event_id = :eventId')
+            ->setParameter('eventId', $eventId)
             ->getQuery()
             ->getResult();
-
     }
 
     /**
