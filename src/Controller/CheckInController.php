@@ -82,7 +82,9 @@ final class CheckInController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}/reset', name: 'reset')]
+    /* Testing route reset all times of everyone. Available for dev only
+     */
+    #[Route('/{slug}/reset', name: 'reset', env: ['dev', 'test'])]
     public function reset (#[MapEntity(mapping: ['slug' => 'slug'])] Event $event, TeamRepository $teamRepository, RunnerRepository $runnerRepository, EntityManagerInterface $entityManager)
     {
         $allRunners = $runnerRepository->findAll();
