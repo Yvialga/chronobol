@@ -38,7 +38,7 @@ class TeamRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    /**
+    /**find all with their trails.
      * @param int $eventId
      * @return array<int, Team, Trail>
      */
@@ -80,5 +80,25 @@ class TeamRepository extends ServiceEntityRepository
             ->setParameter('fk', $fk)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    /**
+     * @param Trail $trail
+     * @return array<int, Team>
+     */
+    public function findOrderByTime (Trail $trail) : array
+    {
+        $dql = <<<DQL
+            SELECT team
+            FROM App\Entity\Team team
+            JOIN team.fk_trail_id trail
+            WHERE trail.id = :trailId
+            ORDER BY team.final_time ASC
+            DQL;
+
+        return $this->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter('trailId', $trail->getId())
+            ->getResult();
     }
 }
