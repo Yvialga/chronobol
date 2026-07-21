@@ -2,6 +2,8 @@
 
 namespace App\Enum;
 
+/** Enums for the state of each event.
+ */
 enum RunStateEnum : string
 {
     case PLANNED = 'programmée';

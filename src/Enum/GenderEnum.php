@@ -2,6 +2,8 @@
 
 namespace App\Enum;
 
+/** Enums for Runners records.
+ */
 enum GenderEnum: string {
 
     case man = "homme";
