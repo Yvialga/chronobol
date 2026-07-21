@@ -33,7 +33,7 @@ security:
         # ROLE_ADMIN: 
     
     access_control:
-        - { path: /controle, roles: ROLE_ADMIN }
+        - { path: /adminboard, roles: ROLE_ADMIN }
         - { path: /event, roles: ROLE_USER }
 
 when@test:

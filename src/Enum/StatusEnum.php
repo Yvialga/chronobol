@@ -2,6 +2,8 @@
 
 namespace App\Enum;
 
+/** Enums for Runner records.
+ */
 enum StatusEnum: string {
 
     case invalid = "invalide";

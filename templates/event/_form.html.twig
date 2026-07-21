@@ -1,4 +1,49 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
+{{ form_start(form, {
+    attr: {class: 'py-8'}
+}) }}
+    {{ form_errors(form) }}
+
+    <fieldset>
+        <label for="{{ form.name.vars.id }}">Nom</label>
+        <input
+            type="text"
+            class="input"
+            name="{{ field_name(form.name) }}"
+            id="{{ form.name.vars.id }}"
+            value="{{ field_value(form.name) }}"
+            placeholder="{{ field_label(form.name) }}"
+        >
+    </fieldset>
+    <fieldset>
+        <label for="{{ form.date.vars.id }}">Date</label>
+        <input
+            type="datetime-local"
+            class="input"
+            name="{{ field_name(form.date) }}"
+            id="{{ form.date.vars.id }}"
+            value="{{ field_value(form.date) }}"
+            placeholder="{{ field_label(form.date) }}"
+        >
+        <button
+                class="input input-border"
+                id="{{ form.date.vars.id }}"
+                name="{{ field_name(form.date) }}"
+                popovertarget="cally-popover1"
+                style="anchor-name:--cally1"
+                value="{{ field_value(form.date) }}"
+        >
+            {{ field_label(form.date) }}
+        </button>
+    </fieldset>
+    {% set currentPath = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) %}
+    {% if currentPath === path('app_event_new') %}
+        <h3 class="mt-6 mb-2 text-xl">Parcours</h3>
+        <ul class="fk_trail_id"
+            data-index="{{ form.fk_trail_id|length > 0 ? form.fk_trail_id|last.vars.name + 1 : 0 }}"
+            data-prototype="{{ form_widget(form.fk_trail_id.vars.prototype)|e('html_attr') }}"
+        ></ul>
+        <button type="button" class="add_item_link cursor-pointer btn" data-collection-holder-class="fk_trail_id">Ajouter un parcours</button>
+    {% endif %}
+
     <button class="btn">{{ button_label|default('Sauvegarder') }}</button>
 {{ form_end(form) }}

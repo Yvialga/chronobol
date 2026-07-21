@@ -1,0 +1,30 @@
+{% extends 'authenticated_user.html.twig' %}
+
+{% block title %}Vérification des puces{% endblock %}
+
+{% block specificjs %}<script defer src="{{ asset('js/verif.js') }}"></script>{% endblock %}
+
+{% block main %}
+    <section class="m-8">
+        <h1 class="text-center font-bold text-4xl mt-4 mb-12">Vérification des puces</h1>
+
+        {{ form_start(form, {
+            action: path('app_event_verif', {slug: event.slug}),
+            attr: {
+                class: 'flex justify-center',
+                id: 'form-of-checkin'
+            }
+        }) }}
+            <fieldset class="flex flex-col items-start">
+                {{ form_label(form.checkin, 'Puce RFID :') }}
+                {{ form_widget(form.checkin, {attr: {
+                    'autofocus': true,
+                    'class': 'border rounded-sm'
+                }}) }}
+                <p class="error">{{ form_errors(form.checkin) }}</p>
+            </fieldset>
+        {{ form_end(form) }}
+
+        {{ include('check/_name_field.html.twig') }}
+    </section>
+{% endblock %}

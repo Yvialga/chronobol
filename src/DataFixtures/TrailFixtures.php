@@ -18,11 +18,10 @@ class TrailFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $trails = [
-            ["Grand bol", "épreuve sportive de 42km", (new \DateTimeImmutable())->setTime(8, 0), self::LARGE_BOWL],
-            ["petit bol", "épreuve sportive de 30km", (new \DateTimeImmutable())->setTime(8, 30), self::SMALL_BOWL],
-            ["Bol découverte", "épreuve sportive de 13km", (new \DateTimeImmutable())->setTime(9, 0), self::DISCOVERY_BOWL]
+            ["Grand bol", "épreuve sportive de 42km", (new \DateTimeImmutable('now', new \DateTimeZone('UTC')))->setTime(8, 0), self::LARGE_BOWL],
+            ["petit bol", "épreuve sportive de 30km", (new \DateTimeImmutable('now', new \DateTimeZone('UTC')))->setTime(8, 30), self::SMALL_BOWL],
+            ["Bol découverte", "épreuve sportive de 13km", (new \DateTimeImmutable('now', new \DateTimeZone('UTC')))->setTime(9, 0), self::DISCOVERY_BOWL]
         ];
-        $i = 0;
         foreach ($trails as $t) {
             $trail = new Trail();
             $trail->setName($t[0]);
@@ -30,23 +29,13 @@ class TrailFixtures extends Fixture implements DependentFixtureInterface
             $trail->setRunState(RunStateEnum::PLANNED);
             $trail->setDescription($t[1]);
             $trail->setMemberNumber(2);
-            $trail->setUpdatedAt(new \DateTimeImmutable('now'));
-            switch ($i) {
-                case 0:
-                    $trail->setFkEventId($this->getReference(EventFixtures::BOL_2026_REFERENCE, Event::class));
-                    break;
-                case 1:
-                    $trail->setFkEventId($this->getReference(EventFixtures::BOL_2027_REFERENCE, Event::class));
-                    break;
-                case 2:
-                    $trail->setFkEventId($this->getReference(EventFixtures::BOL_2028_REFERENCE, Event::class));
-                    break;
-            }
+            $trail->setUpdatedAt(new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
+            $trail->setFkEventId($this->getReference(EventFixtures::BOL_2026_REFERENCE, Event::class));
             $this->addReference($t[3], $trail);
             $manager->persist($trail);
-            $i++;
         }
         $manager->flush();
+        $manager->clear();
     }
 
     public function getDependencies(): array

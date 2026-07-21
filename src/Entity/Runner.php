@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: RunnerRepository::class)]
+#[ORM\Cache(usage: 'NONSTRICT_READ_WRITE', region: 'default')]
 class Runner
 {
     #[ORM\Id]
@@ -65,7 +66,7 @@ class Runner
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'runners')]
     #[ORM\JoinColumn(name: 'fk_team_id', nullable: true)]
     private ?Team $fk_team_id = null;
 
@@ -195,12 +196,12 @@ class Runner
         return $this;
     }
 
-    public function getPersonalTime(): \DateTimeImmutable
+    public function getPersonalTime(): ?\DateTimeImmutable
     {
         return $this->personal_time;
     }
 
-    public function setPersonalTime(?\DateTime $personal_time): static
+    public function setPersonalTime(?\DateTimeImmutable $personal_time): static
     {
         $this->personal_time = $personal_time;
 

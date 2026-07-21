@@ -19,7 +19,7 @@ class RunnerFixtures extends Fixture implements DependentFixtureInterface
     {
         $faker = \Faker\Factory::create('fr_FR');
 
-        /** Array of all teams. Each team have two runners. Index of runner data in the array ([][]) :
+        /** Array of all teams. Each team have two runners. Index of runner data in the array ([][]). Purpose :
          * 0. age
          * 1. gender
          * 2. bibNumber
@@ -282,7 +282,7 @@ class RunnerFixtures extends Fixture implements DependentFixtureInterface
                     StatusEnum::invalid,
                     StatusEnum::register
                 ]));
-                $runner->setUpdatedAt(new \DateTimeImmutable('now'));
+                $runner->setUpdatedAt(new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
                 $runner->setFkTeamId($this->getReference($teamReference, Team::class));
                 $manager->persist($runner);
             }
