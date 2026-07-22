@@ -37,7 +37,10 @@ const handleResult = (runner) => {
         nameElement.innerText = "Aucun compétiteur n'a été trouvé !"
     }
     else {
-        runner = runner[0];
+        /* Here, we specify the value assigned according to the data provided and the page which calls the function */
+        if (!runner.firstname) {
+          runner = runner[0];
+        }
         nameElement.innerText = runner.firstname + " " + runner.lastname;
     }
 }
