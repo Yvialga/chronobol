@@ -6,6 +6,7 @@ use App\Entity\Event;
 use App\Form\EventForm;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,9 +32,8 @@ final class EventController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-//            $event = $form->getData();
             $slugger = new AsciiSlugger('fr');
-            $createdSlug = (string) $slugger->slug((string) $event->getId() . ' ' . $event->getName())->lower();
+            $createdSlug = $slugger->slug($event->getName())->lower() . ' ' . $event->getId();
             $event->setSlug($createdSlug);
             $entityManager->persist($event);
             $entityManager->flush();
@@ -47,10 +47,12 @@ final class EventController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}-{id}', name: 'show', requirements: ['slug' => '[a-zA-Z0-9\-_\/]+'], methods: ['GET'])]
-    public function show(Event $event): Response
+    #[Route('/{slug}/dashboard', name: 'dashboard', requirements: ['slug' => '[a-zA-Z0-9\-_\/]+'], methods: ['GET'])]
+    public function dashboard(
+        #[MapEntity(mapping: ['slug' => 'slug'])] Event $event
+    ): Response
     {
-        return $this->render('event/show.html.twig', [
+        return $this->render('event/dashboard.html.twig', [
             'event' => $event,
         ]);
     }
