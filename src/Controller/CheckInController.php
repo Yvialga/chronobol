@@ -72,8 +72,7 @@ final class CheckInController extends AbstractController
             }
             /** @var $finalTime
              * @type DateTimeImmutable */
-            $finalTime = null;
-            if ($team) $finalTime = $team->getFinalTime();
+            $finalTime = $team?->getFinalTime();
             /* Here, the returned data affects how JavaScript displays the data */
             return $this->json([$returnableRunner, $finalTime ?: ''], Response::HTTP_OK);
         }
