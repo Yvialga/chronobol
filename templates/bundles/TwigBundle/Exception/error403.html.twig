@@ -1,0 +1,20 @@
+{% extends 'authenticated_user.html.twig' %}
+
+{% block title %}Accès refusé - Chronobol{% endblock %}
+
+{% block main %}
+    <div class="place-content-center flex flex-col h-full items-center">
+        <div class="mb-8 text-center">
+            <h2 class="uppercase text-7xl font-bold">{{ status_code }}</h2>
+            <h1 class="text-3xl">Accès refusé</h1>
+        </div>
+        <p>
+            Vérifiez qu'il n'y a pas de faute de frappe dans l'URL ou
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <a class="underline hover:no-underline" href="{{ path('app_event_home') }}">retourner sur l'accueil</a>
+        {% else %}
+            <a class="underline hover:no-underline" href="{{ path('app_login') }}">se connecter</a>
+            {% endif %}.
+        </p>
+    </div>
+{% endblock %}

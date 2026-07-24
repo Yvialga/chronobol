@@ -1,0 +1,14 @@
+{% extends 'base_for_error.html.twig' %}
+
+{% block title %}Page introuvable - Chronobol{% endblock %}
+
+{% block status_code %}404{% endblock %}
+{% block status_text %}Page introuvable{% endblock %}
+{% block text %}
+    Vérifiez qu'il n'y a pas de faute de frappe dans l'URL ou
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <a class="underline hover:no-underline" href="{{ path('app_event_home') }}">retourner sur l'accueil</a>
+    {% else %}
+        <a class="underline hover:no-underline" href="{{ path('app_login') }}">se connecter</a>
+    {% endif %}.
+{% endblock %}
