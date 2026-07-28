@@ -63,3 +63,8 @@ composer update
 cd app/
 npm updgrade
 ```
+
+## Se connecter à mysql
+```bash
+docker exec -it database mysql -u you_user -p
+```
