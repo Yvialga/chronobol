@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Event;
 use App\Form\EventForm;
 use App\Repository\EventRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -63,10 +64,20 @@ final class EventController extends AbstractController
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Event $event, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(EventForm::class, $event);
-        $form->handleRequest($request);
+        $orginalTrails = new ArrayCollection();
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        foreach ($event->getFkTrailId() as $trail) {
+            $orginalTrails->add($trail);
+        }
+        $editForm = $this->createForm(EventForm::class, $event);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            foreach ($orginalTrails as $trail) {
+                $trail->setFkEventId(null);
+                $entityManager->persist($trail);
+            }
+            $entityManager->persist($event);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
@@ -74,7 +85,7 @@ final class EventController extends AbstractController
 
         return $this->render('event/edit.html.twig', [
             'event' => $event,
-            'form' => $form,
+            'form' => $editForm,
         ]);
     }
 
