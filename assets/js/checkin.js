@@ -15,7 +15,7 @@ form.addEventListener("submit", (event) => {
     event.preventDefault();
 });
 
-input.addEventListener('keydown', async (e) => {
+input.addEventListener('keydown', (e) => {
     if (CODE_TO_DIGIT[e.code]) {
         e.preventDefault();
         buffer += CODE_TO_DIGIT[e.code];
