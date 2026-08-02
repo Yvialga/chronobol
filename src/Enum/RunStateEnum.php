@@ -8,5 +8,5 @@ enum RunStateEnum : string
 {
     case PLANNED = 'programmée';
     case IN_PROGRESS = 'en cours';
-    case RACE_OVER = 'finie';
+    case RACE_OVER = 'terminée';
 }
