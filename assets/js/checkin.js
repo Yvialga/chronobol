@@ -37,7 +37,7 @@ const handleResult = (runner) => {
         nameElement.innerText = "Aucun compétiteur n'a été trouvé !"
     }
     else {
-        /* Here, we specify the value assigned according to the data provided and the page which calls the function */
+        /* Here, we adapt how the value will be assigned according to the data provided and which page calls the function */
         if (!runner.firstname) {
           runner = runner[0];
         }

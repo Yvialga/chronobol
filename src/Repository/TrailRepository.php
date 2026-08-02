@@ -34,7 +34,7 @@ class TrailRepository extends ServiceEntityRepository
      * @return Trail|null
      */
     public function getTrailByRunnerId (int $runnerId): ?Trail {
-        // DQL prefers to query builder because Entities are not all build with inversed by properties
+        // DQL prefers to query builder because Entities are not all build with inverted properties
         $dql = <<<DQL
             SELECT trail
             FROM App\Entity\Trail AS trail
