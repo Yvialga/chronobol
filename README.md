@@ -68,3 +68,16 @@ npm updgrade
 ```bash
 docker exec -it database mysql -u you_user -p
 ```
+
+## Exécuter les tests
+```bash
+symfony console --env=test d:d:c
+```
+
+```bash
+symfony console --env=test d:m:m
+```
+
+```bash
+symfony console --env=test d:f:l
+```

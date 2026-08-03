@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Service;
+namespace App\Tests\Integration\Service;
 
 use App\Entity\Runner;
 use App\Entity\Trail;
@@ -21,17 +21,16 @@ class TimingTest extends KernelTestCase
             ->getManager();
     }
 
-    public function testSomething(): void
+    public function testReturnTypeOfComputingTimeFromService(): void
     {
         $kernel = self::bootKernel();
-
         $container = static::getContainer();
 
         $runner = $this->entityManager->getRepository(Runner::class)->findByChip('0006390192');
         $trail = $this->entityManager->getRepository(Trail::class)->getTrailByRunnerId($runner->getId());
         $timingService = $container->get(TimingService::class);
-        $time =  $timingService->computingTime($trail, new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
+        $time = $timingService->computingTime($trail, new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
 
-        // $routerService = $container->get('router');
+        $this->assertInstanceOf(\DateTimeImmutable::class, $time);
     }
 }

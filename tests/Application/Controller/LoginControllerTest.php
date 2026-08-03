@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Application\Controller;
 
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -18,27 +18,9 @@ class LoginControllerTest extends WebTestCase
         $em = $container->get('doctrine.orm.entity_manager');
         $userRepository = $em->getRepository(User::class);
 
-        // Remove any existing users from the test database
-        foreach ($userRepository->findAll() as $user) {
-            $em->remove($user);
-        }
-
-        $em->flush();
-
-        // Create a User fixture
-        /** @var UserPasswordHasherInterface $passwordHasher */
-        $passwordHasher = $container->get('security.user_password_hasher');
-
-        $user = (new User())
-            ->setEmail('email@example.com')
-            ->setUsername('username');
-        $user->setUpdatedAt(new \DateTimeImmutable('now'));
-        $user->setPassword($passwordHasher->hashPassword($user, 'password'));
-
-        $em->persist($user);
         $em->flush();
     }
-
+    // TODO : Create multiple test for different assertions generate
     public function testLogin(): void
     {
         // Denied - Can't login with invalid email address.
@@ -46,8 +28,8 @@ class LoginControllerTest extends WebTestCase
         self::assertResponseIsSuccessful();
 
         $this->client->submitForm('Se connecter', [
-            '_username' => 'username',
-            '_password' => 'password',
+            '_username' => 'user',
+            '_password' => 'mdp-45',
         ]);
 
         self::assertResponseRedirects('/event');
