@@ -20,6 +20,12 @@ jobs:
     name: Tests
     runs-on: ubuntu-latest
     environment: test
+    env:
+       DATABASE_URL: ${{ secrets.DATABASE_URL }}
+       DB_DATABASE: ${{ secrets.DB_DATABASE }}
+       DB_ROOT_PASSWORD: ${{ secrets.DB_ROOT_PASSWORD }}
+       DB_USER: ${{ secrets.DB_USER }}
+       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
@@ -42,18 +48,9 @@ jobs:
             *.cache-from=type=gha,scope=${{github.ref}}
             *.cache-from=type=gha,scope=refs/heads/main
             *.cache-to=type=gha,scope=${{github.ref}},mode=max
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DB_DATABASE: ${{ secrets.DB_DATABASE }}
-          DB_ROOT_PASSWORD: ${{ secrets.DB_ROOT_PASSWORD }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
       - name: Start services
-        run: |
-          docker ps
-          docker ps -a
-          docker compose up --wait --no-build
+        run: docker compose up --wait --no-build
 
       - name: Check HTTP reachability
         run: curl -v --fail-with-body http://localhost
