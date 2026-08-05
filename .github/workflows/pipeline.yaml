@@ -50,7 +50,10 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
       - name: Start services
-        run: docker compose up --wait --no-build
+        run: |
+          docker ps
+          docker ps -a
+          docker compose up --wait --no-build
 
       - name: Check HTTP reachability
         run: curl -v --fail-with-body http://localhost
