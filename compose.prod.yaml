@@ -26,8 +26,8 @@ services:
         soft: 65536
         hard: 65536
 
-  frontend:
-    container_name: frontend
+  app:
+    container_name: app
     build:
       context: ./php
     env_file:
