@@ -20,55 +20,60 @@ jobs:
     name: Tests
     runs-on: ubuntu-latest
     environment: test
-    env:
-       DATABASE_URL: ${{ secrets.DATABASE_URL }}
-       DB_DATABASE: ${{ secrets.DB_DATABASE }}
-       DB_ROOT_PASSWORD: ${{ secrets.DB_ROOT_PASSWORD }}
-       DB_USER: ${{ secrets.DB_USER }}
-       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+    services:
+      database:
+        image: yobasystems/alpine-mariadb
+        env:
+          MYSQL_DATABASE: ${{ secrets.DB_DATABASE }}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_ROOT_PASSWORD }}
+          MYSQL_USER: ${{ secrets.DB_USER }}
+          MYSQL_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          MYSQL_INIT_ONLY: "false"
+        ports:
+          - 3306/tcp
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
         with:
           persist-credentials: false
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
-
-      - name: Build Docker images
-        uses: docker/bake-action@v7
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          pull: true
-          load: true
-          source: .
-          files: |
-            compose.yaml
-            compose.override.yaml
-          set: |
-            *.cache-from=type=gha,scope=${{github.ref}}
-            *.cache-from=type=gha,scope=refs/heads/main
-            *.cache-to=type=gha,scope=${{github.ref}},mode=max
+          php-version: '8.4'
+          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl
+          coverage: none
+          tools: composer:v2
 
-      - name: Start services
-        run: docker compose up --wait --no-build
+      - name: Setup Cache
+        run: echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_ENV
 
-      - name: Check HTTP reachability
-        run: curl -v --fail-with-body http://localhost
-      # Uncomment when the homepage is configured, or change the path to check
-      # - name: Check HTTPS reachability
-      #   run: curl -v --insecure --fail-with-body https://localhost
+      - name: Caching deps
+        uses: actions/cache@v5
+        with:
+          path: ${{ env.COMPOSER_CACHE_DIR }}
+          key: php8.4-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: |
+            php8.3-composer-latest-
 
-      - name: Create test database
-        run: docker compose exec -T app bin/console -e test doctrine:database:create
+      - name: Update composer
+        run: composer self-update
 
-      - name: Run migrations
-        run: docker compose exec -T app bin/console -e test doctrine:migrations:migrate --no-interaction
+      - name: Install dependencies
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: --no-interaction --no-progress --prefer-dist --optimize-autoloader --ansi
 
-      - name: Run PHPUnit
-        run: docker compose exec -T app bin/phpunit
+      - name: Prepare the database
+        run: sudo systemctl start mysql
 
-      - name: Doctrine Schema Validator
-        run: docker compose exec -T app bin/console -e test doctrine:schema:validate
+      - name: Tests
+        run: composer app:tests
+        env:
+          APP_ENV: test
+          DATABASE_URL: mysql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@127.0.0.1:${{ job.services.database.ports['3306'] }}/${{ secrets.DB_DATABASE }}
 
   lint:
     name: Lint
