@@ -21,31 +21,23 @@ class CheckInHandler
     ) {
     }
 
-    /**Get a runner from a chip id. Use it for testing only
+    /**
+     *
      * @param string $chipDetected
+     * @param TimingService $timingService
      * @return Runner|null
      */
-    public function handleChipDetection(string $chipDetected): ?Runner
-    {
-        // function to remove if it is redundant
-        // TODO possible operation of SSE TO display the names in UI
-        return $this->runnerRepository->findByChip($chipDetected);
-    }
-
-    /**
-     * EST-ce que que les services injectés doivent être en phpdoc ? ou déplacé dans construct
-     * @param $chipDetected
-     * @param TimingService $timingService
-     * @return void
-     */
-    public function runnerPointer($chipDetected): ?Runner
+    public function runnerPointer(string $chipDetected): ?Runner
     {
         // Initialization here to not lose time with intermediate.s query.ies to the database
         $dateNow = new DateTimeImmutable();
         $currentRunner = $this->runnerRepository->findByChip($chipDetected);
+        if (is_null($currentRunner)) {
+            return null;
+        }
 
         // Here, we check that the runner don't already have a defined time before to continue
-//        if ($currentRunner->getPersonalTime() !== null) { TODO to uncomment
+//        elseif ($currentRunner->getPersonalTime() !== null) { TODO to uncomment for prod
 //            return null;
 //        }
         $trail = $this->trailRepository->getTrailByRunnerId($currentRunner->getId());
