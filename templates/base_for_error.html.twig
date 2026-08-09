@@ -9,7 +9,6 @@
 {% block title %}Erreur - Chronobol{% endblock %}
 
 {% block body %}
-    {{ dump('IS_AUTHENTICATED_FULLY') }}
     <div class="place-content-center flex flex-col h-full items-center">
         <div class="mb-8 text-center">
             <h2 class="uppercase text-7xl font-bold">{% block status_code %}{{ status_code }}{% endblock %}</h2>

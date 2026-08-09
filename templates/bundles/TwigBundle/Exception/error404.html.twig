@@ -7,8 +7,8 @@
 {% block text %}
     Vérifiez qu'il n'y a pas de faute de frappe dans l'URL ou
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-        <a class="underline hover:no-underline" href="{{ path('app_event_home') }}">retourner sur l'accueil</a>
+        <a class="underline hover:no-underline" href="{{ path('app_event_home') }}">retournerz sur l'accueil</a>
     {% else %}
-        <a class="underline hover:no-underline" href="{{ path('app_login') }}">se connecter</a>
+        <a class="underline hover:no-underline" href="{{ path('app_login') }}">connectez-vous</a>
     {% endif %}.
 {% endblock %}
