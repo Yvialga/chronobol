@@ -1,9 +1,9 @@
-{% extends 'base.html.twig' %}
+{% extends 'authenticated_user.html.twig' %}
 
 {% block title %}Edit Runner{% endblock %}
 
-{% block body %}
-    <h1>Edit Runner</h1>
+{% block main %}
+    <h1 class="font-semibold text-3xl">Edit Runner</h1>
 
     {{ include('runner/_form.html.twig', {'button_label': 'Update'}) }}
 

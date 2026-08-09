@@ -7,81 +7,79 @@
 #}
 
 {% block main %}
-    <section class="m-8">
-        <h1 class="text-3xl">Liste des équipes</h1>
-        <div class="flex justify-end">
-            <a href="{{ path('app_team_new', {slug: event.slug}) }}" class="btn btn-primary">Inscrire une nouvelle équipe</a>
-        </div>
+    <h1 class="text-3xl">Liste des équipes</h1>
+    <div class="flex justify-end">
+        <a href="{{ path('app_team_new', {slug: event.slug}) }}" class="btn btn-primary">Inscrire une nouvelle équipe</a>
+    </div>
 
-        <div class="overflow-x-scroll">
-            <table class="table table-zebra mt-8">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Prénom Capitaine</th>
-                        <th>Nom Capitaine</th>
-                        <th>Prénom</th>
-                        <th>Nom</th>
-                        <th>Parcours</th>
-                        <th>Catégorie</th>
-                        <th>Ont payé</th>
-                        <th>Caution</th>
-                        <th>Vélo électrique</th>
-                        <th>Repas</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for teamData in teams %}
-                    {% set team = teamData[0] %}
-                    {% set runners = teamData[1] %}
-                    <tr class="whitespace-nowrap">
-                        <td>{{ loop.index }}</td>
-                        {% set captain = runners[0].iscaptain ? runners[0] : runners[1] %}
-                        {% set teammate = runners[0].iscaptain ? runners[1] : runners[0] %}
-                        <td>
-                            <a class="inline-block w-full h-full underline hover:no-underline" href="{{ path('app_runner_edit', {id: captain.id} ) }}">
-                                {{ captain.firstname }}
-                            </a>
-                        </td>
-                        <td>
-                            <a class="inline-block w-full h-full underline hover:no-underline" href="{{ path('app_runner_edit', {id: captain.id} ) }}">
-                                {{ captain.lastname }}
-                            </a>
-                        </td>
-                        <td>
-                            <a class="inline-block w-full h-full underline hover:no-underline" href="{{ path('app_runner_edit', {id: teammate.id} ) }}">
-                                {{ teammate.firstname }}
-                            </a>
-                        </td>
-                        <td>
-                            <a class="inline-block w-full h-full underline hover:no-underline" href="{{ path('app_runner_edit', {id: teammate.id} ) }}">
-                                {{ teammate.lastname }}
-                            </a>
-                        </td>
-                        <td class="first-letter:uppercase">{{ teamData.name }}</td>
-                        <td class="first-letter:uppercase">{{ team.category.value }}</td>
-                        <td>{{ team.paidRegistration ? 'Oui' : 'Non' }}</td>
-                        <td>{{ team.deposit ? 'Oui' : 'Non' }}</td>
-                        <td>{{ team.electricBike ? 'Oui' : 'Non' }}</td>
-                        <td>{{ team.mealCount }}</td>
-                        <td class="flex">
-                            <a href="{{ path('app_team_edit', {'slug': event.slug, 'id': team.id} ) }}" class="tooltip px-2" data-tip="Modifier">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-icon lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
-                            </a>
+    <div class="overflow-x-scroll">
+        <table class="table table-zebra mt-8">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Prénom Capitaine</th>
+                    <th>Nom Capitaine</th>
+                    <th>Prénom</th>
+                    <th>Nom</th>
+                    <th>Parcours</th>
+                    <th>Catégorie</th>
+                    <th>Ont payé</th>
+                    <th>Caution</th>
+                    <th>Vélo électrique</th>
+                    <th>Repas</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for teamData in teams %}
+                {% set team = teamData[0] %}
+                {% set runners = teamData[1] %}
+                <tr class="whitespace-nowrap">
+                    <td>{{ loop.index }}</td>
+                    {% set captain = runners[0].iscaptain ? runners[0] : runners[1] %}
+                    {% set teammate = runners[0].iscaptain ? runners[1] : runners[0] %}
+                    <td>
+                        <a class="inline-block w-full h-full underline hover:no-underline" href="{{ path('app_runner_edit', {id: captain.id} ) }}">
+                            {{ captain.firstname }}
+                        </a>
+                    </td>
+                    <td>
+                        <a class="inline-block w-full h-full underline hover:no-underline" href="{{ path('app_runner_edit', {id: captain.id} ) }}">
+                            {{ captain.lastname }}
+                        </a>
+                    </td>
+                    <td>
+                        <a class="inline-block w-full h-full underline hover:no-underline" href="{{ path('app_runner_edit', {id: teammate.id} ) }}">
+                            {{ teammate.firstname }}
+                        </a>
+                    </td>
+                    <td>
+                        <a class="inline-block w-full h-full underline hover:no-underline" href="{{ path('app_runner_edit', {id: teammate.id} ) }}">
+                            {{ teammate.lastname }}
+                        </a>
+                    </td>
+                    <td class="first-letter:uppercase">{{ teamData.name }}</td>
+                    <td class="first-letter:uppercase">{{ team.category.value }}</td>
+                    <td>{{ team.paidRegistration ? 'Oui' : 'Non' }}</td>
+                    <td>{{ team.deposit ? 'Oui' : 'Non' }}</td>
+                    <td>{{ team.electricBike ? 'Oui' : 'Non' }}</td>
+                    <td>{{ team.mealCount }}</td>
+                    <td class="flex">
+                        <a href="{{ path('app_team_edit', {'slug': event.slug, 'id': team.id} ) }}" class="tooltip px-2" data-tip="Modifier">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-icon lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
+                        </a>
 {#                            {% if is_granted('ROLE_ADMIN') %}#}
-                            {{ include('team/_delete_form.html.twig') }}
+                        {{ include('team/_delete_form.html.twig') }}
 {#                            {% endif %}#}
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="10">Aucune équipe enregistrée</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="10">Aucune équipe enregistrée</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-    </section>
 {% endblock %}

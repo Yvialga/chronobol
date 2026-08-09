@@ -3,75 +3,73 @@
 {% block title %}Classement{% endblock %}
 
 {% block main %}
-    <section class="m-8">
-        <h1 class="text-3xl">Classement</h1>
+    <h1 class="text-3xl font-semibold">Classement</h1>
 
-        <div class="flex m-4">
-            <div id="sorting area" class="flex flex-col gap-y-2">
-                <form class="filter border-b-gray-200 border-b-2 pb-2 w-max">
-                    <div>
-                        <input class="btn" type="checkbox" autocomplete="off" name="trails" aria-label="Grand bol">
-                        <input class="btn" type="checkbox" autocomplete="off" name="trails" aria-label="Mini bol">
-                        <input class="btn" type="checkbox" autocomplete="off" name="trails" aria-label="Bol découverte">
-                        <input class="btn btn-square" type="reset" value="×"/>
-                    </div>
-                </form>
-                <form class="filter">
-                    <input class="btn" type="checkbox" name="categories" aria-label="Global"/>
-                    <input class="btn" type="checkbox" name="categories" aria-label="Femme"/>
-                    <input class="btn" type="checkbox" name="categories" aria-label="Homme"/>
-                    <input class="btn" type="checkbox" name="categories" aria-label="Mixte"/>
+    <div class="flex mb-4">
+        <div id="sorting area" class="flex flex-col gap-y-2">
+            <form class="filter border-b-gray-200 border-b-2 pb-2 w-max">
+                <div>
+                    <input class="btn" type="checkbox" autocomplete="off" name="trails" aria-label="Grand bol">
+                    <input class="btn" type="checkbox" autocomplete="off" name="trails" aria-label="Mini bol">
+                    <input class="btn" type="checkbox" autocomplete="off" name="trails" aria-label="Bol découverte">
                     <input class="btn btn-square" type="reset" value="×"/>
-                </form>
-            </div>
-            <div class="flex justify-end ">
-                <button class="btn btn-primary">Filtrer</button>
-            </div>
+                </div>
+            </form>
+            <form class="filter">
+                <input class="btn" type="checkbox" name="categories" aria-label="Global"/>
+                <input class="btn" type="checkbox" name="categories" aria-label="Femme"/>
+                <input class="btn" type="checkbox" name="categories" aria-label="Homme"/>
+                <input class="btn" type="checkbox" name="categories" aria-label="Mixte"/>
+                <input class="btn btn-square" type="reset" value="×"/>
+            </form>
         </div>
+        <div class="flex justify-end ">
+            <button class="btn btn-primary">Filtrer</button>
+        </div>
+    </div>
 
-        <hr>
+    <hr>
 
-        {% if ranked_teams|default(null) %}
-        <div class="overflow-x-scroll">
-            <table class="table table-zebra mt-8">
-                <thead>
-                <tr>
-                    <th>Rang</th>
-                    <th>Temps</th>
-                    <th>Dossard</th>
-                    <th>Capitaine</th>
-                    <th>Coéquipier</th>
+    {% if ranked_teams|default(null) %}
+    <div class="overflow-x-scroll">
+        <table class="table table-zebra mt-8">
+            <thead>
+            <tr>
+                <th>Rang</th>
+                <th>Temps</th>
+                <th>Dossard</th>
+                <th>Capitaine</th>
+                <th>Coéquipier</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for team in ranked_teams %}
+                {% set runners = team.runners %}
+                {% set bibDisplay = false %}
+                <tr class="whitespace-nowrap">
+                    <td>{{ loop.index }}</td>
+                    <td>{{ team.finaltime|date('H:i:s') }}</td>
+                    {% for runner in runners %}
+                        {% if not bibDisplay %}
+                            <td>{{ runner.bibnumber }}</td>
+                            {% set bibDisplay = true %}
+                        {% endif %}
+                        <td>
+                            <span class="uppercase">{{ runner.lastname }}</span>
+                            <span class="inline-block first-letter:uppercase">{{ runner.firstname }}</span>
+                        </td>
+                    {% endfor %}
                 </tr>
-                </thead>
-                <tbody>
-                {% for team in ranked_teams %}
-                    {% set runners = team.runners %}
-                    {% set bibDisplay = false %}
-                    <tr class="whitespace-nowrap">
-                        <td>{{ loop.index }}</td>
-                        <td>{{ team.finaltime|date('H:i:s') }}</td>
-                        {% for runner in runners %}
-                            {% if not bibDisplay %}
-                                <td>{{ runner.bibnumber }}</td>
-                                {% set bibDisplay = true %}
-                            {% endif %}
-                            <td>
-                                <span class="uppercase">{{ runner.lastname }}</span>
-                                <span class="inline-block first-letter:uppercase">{{ runner.firstname }}</span>
-                            </td>
-                        {% endfor %}
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="10">Aucune équipe enregistrée</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        {% else %}
-            <div></div>
-        {% endif %}
+            {% else %}
+                <tr>
+                    <td colspan="10">Aucune équipe enregistrée</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div></div>
+    {% endif %}
 
-    </section>
 {% endblock %}
