@@ -2,12 +2,12 @@
 
 namespace App\Form;
 
-use App\Entity\Event;
 use App\Entity\Trail;
-use App\Entity\TrailTemplate;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -22,11 +22,26 @@ class TrailForm extends AbstractType
                     'class' => 'input',
                 ]
             ])
-            ->add('start_time', null, [
+            ->add('start_time', TimeType::class, [
+                'label' => 'Heure de départ',
                 'widget' => 'single_text',
+                'attr' => [
+                    'class' => 'input',
+                ]
             ])
-            ->add('description')
-            ->add('member_number')
+            ->add('description', TextareaType::class, [
+                'attr' => [
+                    'class' => 'input',
+                ],
+                'required' => false,
+            ])
+            ->add('member_number', NumberType::class, [
+                'disabled' => true,
+                'attr' => [
+                    'class' => 'input',
+                    'value' => 2
+                ]
+            ])
         ;
     }
 

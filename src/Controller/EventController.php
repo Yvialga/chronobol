@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Event;
+use App\Enum\RunStateEnum;
 use App\Form\EventForm;
 use App\Repository\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +30,7 @@ final class EventController extends AbstractController
 
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/nouveau', name: 'new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
     {
         $event = new Event();
         $form = $this->createForm(EventForm::class, $event);
@@ -36,7 +38,19 @@ final class EventController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $slugger = new AsciiSlugger('fr');
-            $createdSlug = $slugger->slug($event->getName())->lower() . ' ' . $event->getId();
+            $createdSlug = $slugger->slug($event->getName())->lower() . '-' . $event->getId();
+            $event->setSlug($createdSlug);
+            $entityManager->persist($event);
+            foreach ($event->getFkTrailId() as $trail) {
+                $trail->setRunState(RunStateEnum::PLANNED);
+                /* Number set in hard, it will be chosen by user in future version */
+                $trail->setMemberNumber(2);
+                $trail->setFkEventId($event);
+                $entityManager->persist($trail);
+            }
+            $entityManager->flush();
+
+            $createdSlug = $slugger->slug($event->getName())->lower() . '-' . $event->getId();
             $event->setSlug($createdSlug);
             $entityManager->persist($event);
             $entityManager->flush();
@@ -80,7 +94,7 @@ final class EventController extends AbstractController
             $entityManager->persist($event);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_event_home', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('event/edit.html.twig', [
@@ -98,6 +112,6 @@ final class EventController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_event_home', [], Response::HTTP_SEE_OTHER);
     }
 }
