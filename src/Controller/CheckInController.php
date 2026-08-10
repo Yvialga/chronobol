@@ -38,6 +38,7 @@ final class CheckInController extends AbstractController
             if ($runner) {
                 $runnerReturnabled = $mapper->map($runner, RunnerPointedDTO::class);
             }
+            /* Here, the returned data affects how JavaScript displays the data */
             return $this->json($runnerReturnabled, Response::HTTP_OK);
         }
 
@@ -71,8 +72,8 @@ final class CheckInController extends AbstractController
             }
             /** @var $finalTime
              * @type DateTimeImmutable */
-            $finalTime = null;
-            if ($team) $finalTime = $team->getFinalTime();
+            $finalTime = $team?->getFinalTime();
+            /* Here, the returned data affects how JavaScript displays the data */
             return $this->json([$returnableRunner, $finalTime ?: ''], Response::HTTP_OK);
         }
 

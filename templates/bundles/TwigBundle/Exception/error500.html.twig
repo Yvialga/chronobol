@@ -1,0 +1,14 @@
+{% extends 'base_for_error.html.twig' %}
+
+{% block title %}Erreur - Chronobol{% endblock %}
+
+{% block status_code %}500{% endblock %}
+{% block status_text %}Erreur du serveur{% endblock %}
+{% block text %}
+    Le serveur a rencontré un problème, veuillez réessayer
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <a class="underline hover:no-underline" href="{{ path('app_event_home') }}">retourner sur l'accueil</a>
+    {% else %}
+        <a class="underline hover:no-underline" href="{{ path('app_login') }}">se connecter</a>
+    {% endif %}.
+{% endblock %}

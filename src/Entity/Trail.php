@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Enum\RunStateEnum;
 use App\Repository\TrailRepository;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
@@ -35,10 +36,10 @@ class Trail
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?\DateTimeImmutable $updated_at = null;
 
-    #[ORM\ManyToOne(inversedBy: 'fk_trail_id')]
+    #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'fk_trail_id')]
     #[ORM\JoinColumn(name: 'fk_event_id', nullable: false)]
     private ?Event $fk_event_id = null;
 
@@ -121,6 +122,7 @@ class Trail
     public function setCreatedAt(): static
     {
         $this->created_at = new \DateTimeImmutable();
+        $this->updated_at = new DateTimeImmutable('now', new \DateTimeZone('UTC'));
 
         return $this;
     }
@@ -130,9 +132,10 @@ class Trail
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updated_at): static
+    #[ORM\PreUpdate]
+    public function setUpdatedAt(): static
     {
-        $this->updated_at = $updated_at;
+        $this->updated_at = new DateTimeImmutable('now', new \DateTimeZone('UTC'));
 
         return $this;
     }
@@ -159,5 +162,9 @@ class Trail
         $this->fk_trail_template_id = $fk_trail_template_id;
 
         return $this;
+    }
+    public function __toString() : string
+    {
+        return 'name'.$this->name;
     }
 }

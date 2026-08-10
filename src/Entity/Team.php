@@ -156,7 +156,7 @@ class Team
     #[ORM\PreUpdate]
     public function setUpdatedAt(): static
     {
-        $this->updated_at = new DateTimeImmutable('now');
+        $this->updated_at = new DateTimeImmutable('now', new \DateTimeZone('UTC'));
 
         return $this;
     }

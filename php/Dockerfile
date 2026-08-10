@@ -1,4 +1,4 @@
-FROM php:8.4-apache
+FROM docker.io/php:8.4-apache
 
 RUN apt-get update \
     && apt-get install -y curl zlib1g-dev g++ git libicu-dev zip libzip-dev \

@@ -15,7 +15,7 @@ form.addEventListener("submit", (event) => {
     event.preventDefault();
 });
 
-input.addEventListener('keydown', async (e) => {
+input.addEventListener('keydown', (e) => {
     if (CODE_TO_DIGIT[e.code]) {
         e.preventDefault();
         buffer += CODE_TO_DIGIT[e.code];
@@ -37,7 +37,10 @@ const handleResult = (runner) => {
         nameElement.innerText = "Aucun compétiteur n'a été trouvé !"
     }
     else {
-        runner = runner[0];
+        /* Here, we adapt how the value will be assigned according to the data provided and which page calls the function */
+        if (!runner.firstname) {
+          runner = runner[0];
+        }
         nameElement.innerText = runner.firstname + " " + runner.lastname;
     }
 }

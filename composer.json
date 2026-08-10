@@ -7,13 +7,13 @@
         "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "doctrine/dbal": "^3.10.5",
-        "doctrine/doctrine-bundle": "^2.18.2",
+        "doctrine/dbal": "^3.10.6",
+        "doctrine/doctrine-bundle": "^2.19.0",
         "doctrine/doctrine-migrations-bundle": "^3.7",
         "doctrine/orm": "^3.6.7",
         "fakerphp/faker": "^1.24.1",
         "phpdocumentor/reflection-docblock": "^5.6.7",
-        "phpstan/phpdoc-parser": "^2.3.2",
+        "phpstan/phpdoc-parser": "^2.3.3",
         "symfony/apache-pack": ">=1.0.1",
         "symfony/asset": "7.4.*",
         "symfony/asset-mapper": "7.4.*",
@@ -21,7 +21,7 @@
         "symfony/doctrine-messenger": "7.4.*",
         "symfony/dotenv": "7.4.*",
         "symfony/expression-language": "7.4.*",
-        "symfony/flex": "^2.10.0",
+        "symfony/flex": "^2.11.0",
         "symfony/form": "7.4.*",
         "symfony/framework-bundle": "7.4.*",
         "symfony/http-client": "7.4.*",
@@ -45,7 +45,7 @@
         "symfony/yaml": "7.4.*",
         "symfonycasts/tailwind-bundle": "^0.12.0",
         "twig/extra-bundle": "^2.12|^3.24",
-        "twig/twig": "^2.12|^3.27.0"
+        "twig/twig": "^2.12|^3.28.0"
     },
     "config": {
         "allow-plugins": {
@@ -87,6 +87,25 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "app:code-quality": [
+          "./vendor/bin/ecs check",
+          "bin/console lint:yaml config --parse-tags",
+          "bin/console lint:twig templates",
+          "bin/console lint:container",
+          "./vendor/bin/phpstan analyse --memory-limit=-1",
+          "./vendor/bin/rector --dry-run"
+        ],
+        "app:migration": [
+          "bin/console doctrine:migrations:migrate"
+        ],
+        "app:tests": [
+          "bin/console doctrine:database:drop --force --if-exists --env=test",
+          "bin/console doctrine:database:create --env=test",
+          "bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration --env=test",
+          "bin/console doctrine:fixtures:load --no-interaction --env=test",
+          "bin/console cache:clear --env=test",
+          "bin/phpunit"
         ]
     },
     "conflict": {
@@ -100,12 +119,12 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^4.3.1",
-        "phpunit/phpunit": "^9.6.34",
+        "phpunit/phpunit": "^9.6.35",
         "symfony/browser-kit": "7.4.*",
         "symfony/css-selector": "7.4.*",
         "symfony/debug-bundle": "7.4.*",
         "symfony/maker-bundle": "^1.67.0",
-        "symfony/phpunit-bridge": "^7.4.8",
+        "symfony/phpunit-bridge": "^7.4.14",
         "symfony/stopwatch": "7.4.*",
         "symfony/web-profiler-bundle": "7.4.*"
     }

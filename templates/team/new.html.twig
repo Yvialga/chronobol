@@ -3,11 +3,9 @@
 {% block title %}Inscription d'une nouvelle équipe{% endblock %}
 
 {% block main %}
-    <section class="m-8">
-        <h1 class="text-3xl">Inscription d'une nouvelle équipe</h1>
+    <h1 class="text-3xl font-semibold">Inscription d'une nouvelle équipe</h1>
 
-        {{ include('team/_form.html.twig') }}
+    {{ include('team/_form.html.twig') }}
 
-        <a href="{{ path('app_team_index', {slug: event.slug}) }}" class="underline hover:no-underline">Retour à la liste des équipes</a>
-    </section>
+    <a href="{{ path('app_team_index', {slug: event.slug}) }}" class="underline hover:no-underline">Retour à la liste des équipes</a>
 {% endblock %}

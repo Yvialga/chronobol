@@ -1,0 +1,28 @@
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    {% set extendedTemplate = 'authenticated_user.html.twig' %}
+{% else %}
+    {% set extendedTemplate = 'base.html.twig' %}
+{% endif %}
+
+{% extends extendedTemplate %}
+
+{% block title %}Erreur - Chronobol{% endblock %}
+
+{% block body %}
+    <div class="place-content-center flex flex-col h-full items-center">
+        <div class="mb-8 text-center">
+            <h2 class="uppercase text-7xl font-bold">{% block status_code %}{{ status_code }}{% endblock %}</h2>
+            <h1 class="text-3xl">{% block status_text %}{{ status_text }}{% endblock %}</h1>
+        </div>
+        <p>
+            {% block text %}
+                Vérifiez qu'il n'y a pas d'erreur parmi les informations envoyés ou
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <a class="underline hover:no-underline" href="{{ path('app_event_home') }}">retourner sur l'accueil</a>
+                {% else %}
+                    <a class="underline hover:no-underline" href="{{ path('app_login') }}">se connecter</a>
+                {% endif %}.
+            {% endblock %}
+        </p>
+    </div>
+{% endblock %}

@@ -3,13 +3,18 @@
 namespace App\Controller;
 
 use App\Entity\Event;
+use App\Enum\RunStateEnum;
 use App\Form\EventForm;
 use App\Repository\EventRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
 #[Route('/event', name: 'app_event_')]
@@ -23,17 +28,29 @@ final class EventController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/nouveau', name: 'new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
     {
         $event = new Event();
         $form = $this->createForm(EventForm::class, $event);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-//            $event = $form->getData();
             $slugger = new AsciiSlugger('fr');
-            $createdSlug = (string) $slugger->slug((string) $event->getId() . ' ' . $event->getName())->lower();
+            $createdSlug = $slugger->slug($event->getName())->lower() . '-' . $event->getId();
+            $event->setSlug($createdSlug);
+            $entityManager->persist($event);
+            foreach ($event->getFkTrailId() as $trail) {
+                $trail->setRunState(RunStateEnum::PLANNED);
+                /* Number set in hard, it will be chosen by user in future version */
+                $trail->setMemberNumber(2);
+                $trail->setFkEventId($event);
+                $entityManager->persist($trail);
+            }
+            $entityManager->flush();
+
+            $createdSlug = $slugger->slug($event->getName())->lower() . '-' . $event->getId();
             $event->setSlug($createdSlug);
             $entityManager->persist($event);
             $entityManager->flush();
@@ -47,32 +64,46 @@ final class EventController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}-{id}', name: 'show', requirements: ['slug' => '[a-zA-Z0-9\-_\/]+'], methods: ['GET'])]
-    public function show(Event $event): Response
+    #[Route('/{slug}/dashboard', name: 'dashboard', requirements: ['slug' => '[a-zA-Z0-9\-_\/]+'], methods: ['GET'])]
+    public function dashboard(
+        #[MapEntity(mapping: ['slug' => 'slug'])] Event $event
+    ): Response
     {
-        return $this->render('event/show.html.twig', [
+        return $this->render('event/dashboard.html.twig', [
             'event' => $event,
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Event $event, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(EventForm::class, $event);
-        $form->handleRequest($request);
+        $orginalTrails = new ArrayCollection();
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        foreach ($event->getFkTrailId() as $trail) {
+            $orginalTrails->add($trail);
+        }
+        $editForm = $this->createForm(EventForm::class, $event);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            foreach ($orginalTrails as $trail) {
+                $trail->setFkEventId(null);
+                $entityManager->persist($trail);
+            }
+            $entityManager->persist($event);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_event_home', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('event/edit.html.twig', [
             'event' => $event,
-            'form' => $form,
+            'form' => $editForm,
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'delete', methods: ['POST'])]
     public function delete(Request $request, Event $event, EntityManagerInterface $entityManager): Response
     {
@@ -81,6 +112,6 @@ final class EventController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_event_home', [], Response::HTTP_SEE_OTHER);
     }
 }

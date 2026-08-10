@@ -1,0 +1,17 @@
+services:
+  app:
+    container_name: app
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+#    env_file:
+#      - .env.local
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    ports:
+      - 8080:80
+    volumes:
+      - ./apache/default.conf:/etc/apache2/sites-enabled/000-default.conf
+      - ./app:/var/www
+    depends_on:
+      - database
