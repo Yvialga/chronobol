@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\EventRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -35,7 +36,7 @@ class Event
     /**
      * @var Collection<int, Trail>
      */
-    #[ORM\OneToMany(targetEntity: Trail::class, mappedBy: 'fk_event_id')]
+    #[ORM\OneToMany(targetEntity: Trail::class, mappedBy: 'fk_event_id', cascade: ['persist', 'remove'])]
     private Collection $fk_trail_id;
 
     public function __construct()
@@ -93,6 +94,7 @@ class Event
     public function setCreatedAt(): void
     {
         $this->created_at = new \DateTimeImmutable();
+        $this->updated_at = new DateTimeImmutable('now', new \DateTimeZone('UTC'));
     }
 
     public function getUpdatedAt(): \DateTimeImmutable
@@ -100,9 +102,12 @@ class Event
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updated_at): void
+    #[ORM\PreUpdate]
+    public function setUpdatedAt(): static
     {
-        $this->updated_at = $updated_at;
+        $this->updated_at = new DateTimeImmutable('now', new \DateTimeZone('UTC'));
+
+        return $this;
     }
 
     /**
