@@ -275,7 +275,7 @@ class RunnerFixtures extends Fixture implements DependentFixtureInterface
                 $runner->setChipId($member[3]);
                 $runner->setIsCaptain($member[4]);
                 $runner->setIsUnderage($member[5]);
-                $runner->setMedicalCertificate("https://jsonplaceholder.typicode.com/photos/1");
+                $runner->setMedicalCertificate($faker->boolean(60));
                 $runner->setParentalConsent($member[6]);
                 $runner->setIsValidate($member[7]);
                 $runner->setStatus($faker->randomElement([

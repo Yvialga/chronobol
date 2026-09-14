@@ -46,8 +46,8 @@ class Runner
     #[ORM\Column]
     private bool $is_underage = false;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $medical_certificate = null;
+    #[ORM\Column]
+    private bool $medical_certificate = false;
 
     #[ORM\Column]
     private bool $parental_consent = false;
