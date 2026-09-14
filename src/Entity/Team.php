@@ -144,6 +144,7 @@ class Team
     public function setCreatedAt(): static
     {
         $this->created_at = new \DateTimeImmutable();
+        $this->updated_at = new DateTimeImmutable('now', new \DateTimeZone('UTC'));
 
         return $this;
     }

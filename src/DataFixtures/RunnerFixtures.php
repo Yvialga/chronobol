@@ -282,7 +282,6 @@ class RunnerFixtures extends Fixture implements DependentFixtureInterface
                     StatusEnum::invalid,
                     StatusEnum::register
                 ]));
-                $runner->setUpdatedAt(new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
                 $runner->setFkTeamId($this->getReference($teamReference, Team::class));
                 $manager->persist($runner);
             }

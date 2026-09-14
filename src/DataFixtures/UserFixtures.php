@@ -21,7 +21,6 @@ class UserFixtures extends Fixture implements FIxtureGroupInterface
         $user->setPassword($this->userPasswordHasher->hashPassword($user, 'mdp-45'));
         $user->setEmail("user@myclub.fr");
         $user->setRoles(['ROLE_USER']);
-        $user->setUpdatedAt(new \DateTimeImmutable('now'));
         $manager->persist($user);
 
         $admin = new User();
@@ -29,7 +28,6 @@ class UserFixtures extends Fixture implements FIxtureGroupInterface
         $admin->setPassword($this->userPasswordHasher->hashPassword($admin, 'admin-123'));
         $admin->setEmail("admin@myclub.fr");
         $admin->setRoles(['ROLE_ADMIN', 'ROLE_USER']);
-        $admin->setUpdatedAt(new \DateTimeImmutable('now'));
         $manager->persist($admin);
 
         $manager->flush();

@@ -24,7 +24,6 @@ class EventFixtures extends Fixture
             $event->setName($i[0]);
             $event->setDate($i[1]);
             $event->setSlug($i[2]);
-            $event->setUpdatedAt(new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
             $this->addReference($i[2], $event);
             $manager->persist($event);
         }
