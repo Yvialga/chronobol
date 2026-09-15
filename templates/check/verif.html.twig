@@ -4,6 +4,10 @@
 
 {% block specificjs %}<script defer src="{{ asset('js/checkin.js') }}"></script>{% endblock %}
 
+{% block item %}
+    {{ include('drawer/global.html.twig') }}
+{% endblock %}
+
 {% block main %}
     <h1 class="text-center font-bold text-4xl mt-4 mb-12">Vérification des puces</h1>
 

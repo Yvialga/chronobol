@@ -26,6 +26,7 @@ final class RankingController extends AbstractController
 
         return $this->render('ranking/index.html.twig', [
             'ranked_teams' => $teams,
+            'event' => $event,
         ]);
     }
 

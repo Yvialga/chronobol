@@ -2,6 +2,10 @@
 
 {% block title %}Inscription d'une nouvelle équipe{% endblock %}
 
+{% block item %}
+    {{ include('drawer/global.html.twig') }}
+{% endblock %}
+
 {% block main %}
     <a href="{{ path('app_team_index', {slug: event.slug}) }}" class="underline hover:no-underline">Retour à la liste des équipes</a>
     <h1 class="text-3xl font-semibold">Inscription d'une nouvelle équipe</h1>

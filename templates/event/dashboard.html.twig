@@ -1,10 +1,12 @@
 {% extends 'authenticated_user.html.twig' %}
 
+{% block item %}
+    {{ include('drawer/global.html.twig') }}
+{% endblock %}
+
 {% block title %}Compétition{% endblock %}
 
 {% block main %}
-    <a class="underline hover:no-underline" href="{{ path('app_event_home') }}">Retour à la liste</a>
-
     <div class="mb-6">
         <div class="flex flex-col gap-y-6">
             <div class="mt-4">

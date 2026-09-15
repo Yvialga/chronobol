@@ -1,10 +1,14 @@
 {% extends 'authenticated_user.html.twig' %}
 
-{% block title %}Edit Runner{% endblock %}
+{% block title %}Modification du compétiteur{% endblock %}
+
+{% block item %}
+    {{ include('drawer/global.html.twig') }}
+{% endblock %}
 
 {% block main %}
-    <h1 class="font-semibold text-3xl">Edit Runner</h1>
+    <h1 class="font-semibold text-3xl">Modification du compétiteur</h1>
 
-    {{ include('runner/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('runner/_form.html.twig', {'button_label': 'Modifier'}) }}
 
 {% endblock %}
