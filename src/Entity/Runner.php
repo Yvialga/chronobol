@@ -67,7 +67,7 @@ class Runner
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
 
-    #[ORM\ManyToOne(inversedBy: 'runners')]
+    #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'runners')]
     #[ORM\JoinColumn(name: 'fk_team_id', nullable: true)]
     private ?Team $fk_team_id = null;
 

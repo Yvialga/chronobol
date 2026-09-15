@@ -1,10 +1,16 @@
 {% extends 'authenticated_user.html.twig' %}
 
-{% block title %}Liste des équipes{% endblock %}
+{% block item %}
+    <h2 class="mt-3 mb-2 uppercase text-sm font-light">Compétition</h2>
+    <li>
+        <button>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house-icon lucide-house"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            <a href="{{ path('app_event_dashboard', {slug: event.slug}) }}">Accueil compétition</a>
+        </button>
+    </li>
+{% endblock %}
 
-{# Rechercher :
-    - statistiques COUNT des repas, nombre d'équipe (loop.length?)
-#}
+{% block title %}Liste des équipes{% endblock %}
 
 {% block main %}
     <h1 class="text-3xl">Liste des équipes</h1>
@@ -12,21 +18,42 @@
         <a href="{{ path('app_team_new', {slug: event.slug}) }}" class="btn btn-primary">Inscrire une nouvelle équipe</a>
     </div>
 
+    <div class="flex mb-4">
+        <div id="sorting area" class="flex flex-col gap-y-2">
+            <form class="filter border-b-gray-200 border-b-2 pb-2 w-max">
+                <div>
+                    <input class="btn" type="checkbox" autocomplete="off" name="trails" aria-label="Grand bol">
+                    <input class="btn" type="checkbox" autocomplete="off" name="trails" aria-label="Mini bol">
+                    <input class="btn" type="checkbox" autocomplete="off" name="trails" aria-label="Bol découverte">
+                    <input class="btn btn-square" type="reset" value="×"/>
+                </div>
+            </form>
+            <form class="filter">
+                <input class="btn" type="checkbox" name="categories" aria-label="Global"/>
+                <input class="btn" type="checkbox" name="categories" aria-label="Femme"/>
+                <input class="btn" type="checkbox" name="categories" aria-label="Homme"/>
+                <input class="btn" type="checkbox" name="categories" aria-label="Mixte"/>
+                <input class="btn btn-square" type="reset" value="×"/>
+            </form>
+        </div>
+        <div class="flex justify-end items-stretch">
+            <button class="btn btn-primary h-full">Filtrer</button>
+        </div>
+    </div>
+
     <div class="overflow-x-scroll">
         <table class="table table-zebra mt-8">
             <thead>
                 <tr>
                     <th></th>
-                    <th>Prénom Capitaine</th>
-                    <th>Nom Capitaine</th>
-                    <th>Prénom</th>
-                    <th>Nom</th>
+                    <th>Capitaine</th>
+                    <th>Coéquipier</th>
                     <th>Parcours</th>
                     <th>Catégorie</th>
-                    <th>Ont payé</th>
+                    <th>Payé</th>
                     <th>Caution</th>
                     <th>Vélo électrique</th>
-                    <th>Repas</th>
+                    <th>Repas supplémentaires</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -40,22 +67,12 @@
                     {% set teammate = runners[0].iscaptain ? runners[1] : runners[0] %}
                     <td>
                         <a class="inline-block w-full h-full underline hover:no-underline" href="{{ path('app_runner_edit', {id: captain.id} ) }}">
-                            {{ captain.firstname }}
-                        </a>
-                    </td>
-                    <td>
-                        <a class="inline-block w-full h-full underline hover:no-underline" href="{{ path('app_runner_edit', {id: captain.id} ) }}">
-                            {{ captain.lastname }}
+                            {{ captain.firstname }} <span class="uppercase">{{ captain.lastname }}</span>
                         </a>
                     </td>
                     <td>
                         <a class="inline-block w-full h-full underline hover:no-underline" href="{{ path('app_runner_edit', {id: teammate.id} ) }}">
-                            {{ teammate.firstname }}
-                        </a>
-                    </td>
-                    <td>
-                        <a class="inline-block w-full h-full underline hover:no-underline" href="{{ path('app_runner_edit', {id: teammate.id} ) }}">
-                            {{ teammate.lastname }}
+                            {{ teammate.firstname }} <span class="uppercase">{{ teammate.lastname }}</span>
                         </a>
                     </td>
                     <td class="first-letter:uppercase">{{ teamData.name }}</td>

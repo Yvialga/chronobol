@@ -50,7 +50,7 @@ class Team
     /**
      * @var Collection<int, Runner>
      */
-    #[ORM\OneToMany(targetEntity: Runner::class, mappedBy: 'fk_team_id')]
+    #[ORM\OneToMany(targetEntity: Runner::class, mappedBy: 'fk_team_id', cascade: ['persist', 'remove'])]
     private Collection $runners;
 
     public function __construct()
@@ -182,22 +182,22 @@ class Team
         return $this->runners;
     }
 
-    public function addRunnerId(Runner $runnerId): static
+    public function addRunner(Runner $runner): static
     {
-        if (!$this->runners->contains($runnerId)) {
-            $this->runners->add($runnerId);
-            $runnerId->setFkTeamId($this);
+        if (!$this->runners->contains($runner)) {
+            $this->runners->add($runner);
+            $runner->setFkTeamId($this);
         }
 
         return $this;
     }
 
-    public function removeRunnerId(Runner $runnerId): static
+    public function removeRunner(Runner $runner): static
     {
-        if ($this->runners->removeElement($runnerId)) {
+        if ($this->runners->removeElement($runner)) {
             // set the owning side to null (unless already changed)
-            if ($runnerId->getFkTeamId() === $this) {
-                $runnerId->setFkTeamId(null);
+            if ($runner->getFkTeamId() === $this) {
+                $runner->setFkTeamId(null);
             }
         }
 
