@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\DTO\RunnerPointedDTO;
 use App\Entity\Event;
 use App\Form\CheckinForm;
+use App\Form\ManualCheckinForm;
 use App\Repository\RunnerRepository;
 use App\Repository\TeamRepository;
 use App\Repository\TrailRepository;
@@ -25,6 +26,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 #[Route('/event', name: 'app_event_')]
 final class CheckInController extends AbstractController
 {
+    /* Route to test chip assignment before the starting of the event */
     #[Route('/{slug}/verif', name: 'verif', methods: ['GET', 'POST'])]
     public function verif (
         #[MapEntity(mapping: ['slug' => 'slug'])] Event $event,
@@ -72,6 +74,8 @@ final class CheckInController extends AbstractController
     ): Response
     {
         $form = $this->createForm(CheckinForm::class);
+        $manualForm = $this->createForm(ManualCheckinForm::class);
+        $manualForm->handleRequest($request);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -93,6 +97,7 @@ final class CheckInController extends AbstractController
 
         return $this->render('check/checkin.html.twig', [
             'form' => $form,
+            'manualForm' => $manualForm,
             'event' => $event
         ]);
     }
