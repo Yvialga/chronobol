@@ -64,6 +64,9 @@ final class TeamController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $captain->setStatus(StatusEnum::register);
             $teammate->setStatus(StatusEnum::register);
+            // Algo pour mettre le STATUS adéquat
+            // vérifier que le N° de DOSSARD n'est pas déjà utilisé
+            // vérifier l'unicité de l'ID de la puce
             $entityManager->persist($team);
             $entityManager->flush();
 
@@ -77,7 +80,7 @@ final class TeamController extends AbstractController
         ]);
     }
 
-    #[Route('{slug}/team/{id}/edit', name: 'app_team_edit', methods: ['GET', 'POST'])]
+    #[Route('{slug}/team/{id}/edit', name: 'app_team_edit', options: ['expose' => true], methods: ['GET', 'POST'])]
     public function edit(
         #[MapEntity(mapping: ['slug' => 'slug'])] Event $event,
         Request $request,

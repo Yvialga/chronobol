@@ -12,7 +12,9 @@ class CheckinForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('checkin', TextType::class)
+            ->add('checkin', TextType::class, [
+                'required' => false,
+            ])
         ;
     }
 

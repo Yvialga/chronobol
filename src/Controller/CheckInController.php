@@ -7,6 +7,7 @@ use App\Entity\Event;
 use App\Form\CheckinForm;
 use App\Repository\RunnerRepository;
 use App\Repository\TeamRepository;
+use App\Repository\TrailRepository;
 use App\Services\CheckInHandler;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,18 +26,31 @@ use Symfony\Component\Serializer\SerializerInterface;
 final class CheckInController extends AbstractController
 {
     #[Route('/{slug}/verif', name: 'verif', methods: ['GET', 'POST'])]
-    public function verif (#[MapEntity(mapping: ['slug' => 'slug'])] Event $event, Request $request, RunnerRepository $runnerRepository, ObjectMapperInterface $mapper): Response
+    public function verif (
+        #[MapEntity(mapping: ['slug' => 'slug'])] Event $event,
+        Request $request,
+        RunnerRepository $runnerRepository,
+        TeamRepository $teamRepository,
+        TrailRepository $trailRepository,
+        ObjectMapperInterface $mapper
+    ): Response
     {
         $form = $this->createForm(CheckinForm::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $runner = $runnerRepository->findByChip($data->checkin);
+            $runnerIfExist = $runnerRepository->findByChip($data->checkin);
+            $dtoForSimplifiedAccess = new RunnerPointedDTO(); // instance pour accéder plus facilement aux propriétés du dto
             /** Return state of the data to be displayed on web interface or false if no runner was found. */
             $runnerReturnabled = false;
-            if ($runner) {
-                $runnerReturnabled = $mapper->map($runner, RunnerPointedDTO::class);
+            if ($runnerIfExist) {
+                $team = $teamRepository->findByFK($runnerIfExist->getFkTeamId());
+
+                $runnerReturnabled = $mapper->map($runnerIfExist, $dtoForSimplifiedAccess);
+                $trail = $trailRepository->getTrailByRunnerId($runnerIfExist->getId());
+                $dtoForSimplifiedAccess->trail = $trail->getName();
+                $dtoForSimplifiedAccess->team_id = $team->getId();
             }
             /* Here, the returned data affects how JavaScript displays the data */
             return $this->json($runnerReturnabled, Response::HTTP_OK);
