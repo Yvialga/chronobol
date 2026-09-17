@@ -1531,15 +1531,17 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     postcss_config_file?: scalar|Param|null, // Path to PostCSS config file which is passed to the Tailwind CLI // Default: null
  *     strict_mode?: bool|Param|null, // When enabled, an exception will be thrown if there are no built assets (default: false in `test` env, true otherwise) // Default: null
  * }
- * @psalm-type TwigComponentConfig = array{
- *     defaults?: array<string, Param|string|array{ // Default: []
- *         template_directory?: scalar|Param|null, // Default: "components"
- *         name_prefix?: scalar|Param|null, // Default: ""
- *     }>,
- *     anonymous_template_directory?: scalar|Param|null, // Defaults to `components`
- *     profiler?: bool|array{ // Enables the profiler for Twig Component
- *         enabled?: bool|Param, // Default: "%kernel.debug%"
- *         collect_components?: bool|Param, // Collect components instances // Default: true
+ * @psalm-type FosJsRoutingConfig = array{
+ *     serializer?: scalar|Param|null,
+ *     routes_to_expose?: list<scalar|Param|null>,
+ *     router?: scalar|Param|null, // Default: "router"
+ *     request_context_base_url?: scalar|Param|null, // Default: null
+ *     cache_control?: array{
+ *         public?: bool|Param, // Default: false
+ *         expires?: scalar|Param|null, // Default: null
+ *         maxage?: scalar|Param|null, // Default: null
+ *         smaxage?: scalar|Param|null, // Default: null
+ *         vary?: list<scalar|Param|null>,
  *     },
  * }
  * @psalm-type ConfigType = array{
@@ -1554,7 +1556,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     security?: SecurityConfig,
  *     monolog?: MonologConfig,
  *     symfonycasts_tailwind?: SymfonycastsTailwindConfig,
- *     twig_component?: TwigComponentConfig,
+ *     fos_js_routing?: FosJsRoutingConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -1570,7 +1572,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         monolog?: MonologConfig,
  *         maker?: MakerConfig,
  *         symfonycasts_tailwind?: SymfonycastsTailwindConfig,
- *         twig_component?: TwigComponentConfig,
+ *         fos_js_routing?: FosJsRoutingConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1584,7 +1586,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
  *         symfonycasts_tailwind?: SymfonycastsTailwindConfig,
- *         twig_component?: TwigComponentConfig,
+ *         fos_js_routing?: FosJsRoutingConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -1599,7 +1601,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
  *         symfonycasts_tailwind?: SymfonycastsTailwindConfig,
- *         twig_component?: TwigComponentConfig,
+ *         fos_js_routing?: FosJsRoutingConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,
