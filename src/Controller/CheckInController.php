@@ -10,6 +10,7 @@ use App\Repository\RunnerRepository;
 use App\Repository\TeamRepository;
 use App\Repository\TrailRepository;
 use App\Services\CheckInHandler;
+use App\Services\MatcherService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -68,9 +69,9 @@ final class CheckInController extends AbstractController
     public function checkin (
         #[MapEntity(mapping: ['slug' => 'slug'])] Event $event,
         Request $request,
-        RunnerRepository $runnerRepository,
-        ObjectMapperInterface $mapper,
-        CheckInHandler $checkinHandler
+        CheckInHandler $checkinHandler,
+        LoggerInterface $logger,
+        MatcherService $matcher
     ): Response
     {
         $form = $this->createForm(CheckinForm::class);
@@ -80,19 +81,27 @@ final class CheckInController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $runner = $checkinHandler->runnerPointer($data->checkin);
-            $team = $checkinHandler->setTimeToTeam($runner);
-            /** Returns the data to be displayed on web interface or false if no runner was found. */
-            $returnableRunner = false;
-            if ($runner) {
-                $returnableRunner = $mapper->map($runner, RunnerPointedDTO::class);
+            // Initialization here to not lose time with intermediate.s query.ies to the database
+            $dateNow = new DateTimeImmutable();
 
+            $runnerFound = $checkinHandler->searchRunner(chip: $data->checkin);
+            $logger->critical($runnerFound->getFirstname());
+
+            if ($runnerFound) {
+                $returnableRunner = $matcher->checkInLogic($runnerFound, $dateNow);
             }
-            /** @var $finalTime
-             * @type DateTimeImmutable */
-            $finalTime = $team?->getFinalTime();
-            /* Here, the returned data affects how JavaScript displays the data */
-            return $this->json([$returnableRunner, $finalTime ?: ''], Response::HTTP_OK);
+            return $this->json($returnableRunner??false, Response::HTTP_OK);
+        }
+
+        if ($manualForm->isSubmitted() && $manualForm->isValid()) {
+            $data = $manualForm->getData();
+            $dateNow = new DateTimeImmutable();
+
+            $runner = $checkinHandler->searchRunner(bib_number: $data->bib_number, role: $data->captain);
+            if ($runner) {
+                $returnableRunner = $matcher->checkInLogic($runner, $dateNow);
+            }
+            return $this->json($returnableRunner??false, Response::HTTP_OK);
         }
 
         return $this->render('check/checkin.html.twig', [
