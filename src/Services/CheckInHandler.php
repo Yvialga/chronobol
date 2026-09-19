@@ -3,11 +3,13 @@
 namespace App\Services;
 use App\Entity\Runner;
 use App\Entity\Team;
+use App\Enum\TeamRole;
 use App\Repository\RunnerRepository;
 use App\Repository\TeamRepository;
 use App\Repository\TrailRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 
 /** Service of operations and business logic when a chip is check-in by RFID reader. */
 class CheckInHandler
@@ -18,36 +20,53 @@ class CheckInHandler
         private TeamRepository         $teamRepository,
         private RunnerRepository       $runnerRepository,
         private TimingService          $timingService,
+        private LoggerInterface        $logger,
     ) {
     }
 
-    /**
-     *
-     * @param string $chipDetected
-     * @param TimingService $timingService
+    /**Looking for the runner either by using chip only or bib with role.
+     * @param string|null $chip ID detected by RFID reader.
+     * @param int|null $bib_number Value entered by the user and communicated by the runner.
+     * @param TeamRole|null $role Value obtained from TeamRole enum.
      * @return Runner|null
      */
-    public function runnerPointer(string $chipDetected): ?Runner
+    public function searchRunner (?string $chip = null, ?int $bib_number = null, ?TeamRole $role = null): ?Runner
     {
-        // Initialization here to not lose time with intermediate.s query.ies to the database
-        $dateNow = new DateTimeImmutable();
-        $currentRunner = $this->runnerRepository->findByChip($chipDetected);
-        if (is_null($currentRunner)) {
+        // Create two methods searchRunner. One with chip argument, the other one with bib and role
+        if ($chip) $runner = $this->runnerRepository->findByChip($chip);
+        elseif ($bib_number != null && $role != null) $runner = $this->runnerRepository->findByBibAndRole($bib_number, $role->value);
+        else $runner = null;
+
+        $this->logger->alert('yes : '.$runner->getFirstname().' '.$runner->getLastname());
+
+
+        if (is_null($runner)) {
             return null;
         }
-
-        // Here, we check that the runner don't already have a defined time before to continue
-//        elseif ($currentRunner->getPersonalTime() !== null) { TODO to uncomment for prod
-//            return null;
+//      Here, we check that the runner don't already have a defined time before to continue
+//        elseif ($runner->getPersonalTime() !== null) { //TODO to uncomment for prod
+//            return null; // TODO HERE Throw an error to catch in controller
 //        }
-        $trail = $this->trailRepository->getTrailByRunnerId($currentRunner->getId());
+
+        return $runner;
+    }
+
+    /**Check the runner by setting its personal time value.
+     *
+     * @param Runner $runnerFound
+     * @param DateTimeImmutable $dateNow To calculate time
+     * @return Runner|null
+     */
+    public function checkRunner (Runner $runnerFound, DateTimeImmutable $dateNow): ?Runner
+    {
+        $trail = $this->trailRepository->getTrailByRunnerId($runnerFound->getId());
 
         $timedRun = $this->timingService->computingTime($trail, $dateNow);
-        $currentRunner->setPersonalTime($timedRun);
-        $this->entityManager->persist($currentRunner);
+        $runnerFound->setPersonalTime($timedRun);
+        $this->entityManager->persist($runnerFound);
         $this->entityManager->flush();
 
-        return $currentRunner;
+        return $runnerFound;
     }
 
     /**Set the time of the team only if all members have arrived.
