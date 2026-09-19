@@ -42,6 +42,23 @@ class RunnerRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    /**
+     * @param int $bib
+     * @param int $role This may constitute a *technical debt*. In fact, if we use Postgre, PGSQL accepts "true" value, but we pass it 0 or 1 depending on TeamRole enum
+     * @return Runner|null
+     */
+    public function findByBibAndRole (int $bib, int $role): ?Runner
+    {
+        // We check both bib and is_captain because in the event, the two members of one team have the same bib.
+        return $this->createQueryBuilder('runner')
+            ->andWhere('runner.bib_number = :bib')
+            ->andWhere('runner.is_captain = :role')
+            ->setParameter('bib', $bib)
+            ->setParameter('role', $role)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     /** Get all members of a team by the bib number. Parameter excludeRunner is optional and is must be used to exclude a specified Runner
      * @param int $bib
      * @param Runner|null $excludedRunner
