@@ -70,7 +70,6 @@ final class CheckInController extends AbstractController
         #[MapEntity(mapping: ['slug' => 'slug'])] Event $event,
         Request $request,
         CheckInHandler $checkinHandler,
-        LoggerInterface $logger,
         MatcherService $matcher
     ): Response
     {
@@ -82,10 +81,9 @@ final class CheckInController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             // Initialization here to not lose time with intermediate.s query.ies to the database
-            $dateNow = new DateTimeImmutable();
+            $dateNow = new DateTimeImmutable('now', new \DateTimeZone('UTC'));
 
             $runnerFound = $checkinHandler->searchRunner(chip: $data->checkin);
-            $logger->critical($runnerFound->getFirstname());
 
             if ($runnerFound) {
                 $returnableRunner = $matcher->checkInLogic($runnerFound, $dateNow);
@@ -95,7 +93,7 @@ final class CheckInController extends AbstractController
 
         if ($manualForm->isSubmitted() && $manualForm->isValid()) {
             $data = $manualForm->getData();
-            $dateNow = new DateTimeImmutable();
+            $dateNow = new DateTimeImmutable('now', new \DateTimeZone('UTC'));
 
             $runner = $checkinHandler->searchRunner(bib_number: $data->bib_number, role: $data->captain);
             if ($runner) {
