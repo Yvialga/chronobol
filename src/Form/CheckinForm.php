@@ -7,7 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CheckinForm extends AbstractType
+class CheckinForm extends AbstractType // Be sure to adapt the getElement js variable if the form's name is changed
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
