@@ -21,10 +21,12 @@
             }) }}
                 <fieldset class="flex flex-col items-start">
                     {{ form_label(form.checkin, 'Pointage') }}
-                    {{ form_widget(form.checkin, {attr: {
-                        'autofocus': true,
-                        'class': 'border rounded-sm'
-                    }}) }}
+                    <div id="chip-input" class="flex gap-x-3">
+                        {{ form_widget(form.checkin, {attr: {
+                            'autofocus': true,
+                            'class': 'border rounded-sm'
+                        }}) }}
+                    </div>
                     <p class="error">{{ form_errors(form.checkin) }}</p>
                 </fieldset>
             {{ form_end(form) }}
