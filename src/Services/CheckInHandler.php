@@ -3,6 +3,7 @@
 namespace App\Services;
 use App\Entity\Runner;
 use App\Entity\Team;
+use App\Entity\Trail;
 use App\Enum\TeamRole;
 use App\Repository\RunnerRepository;
 use App\Repository\TeamRepository;
@@ -55,13 +56,13 @@ class CheckInHandler
      *
      * @param Runner $runnerFound
      * @param DateTimeImmutable $dateNow To calculate time
+     * @param Trail $trail
      * @return Runner|null
      */
-    public function checkRunner (Runner $runnerFound, DateTimeImmutable $dateNow): ?Runner
+    public function checkRunner (Runner $runnerFound, DateTimeImmutable $dateNow, Trail $trail): ?Runner
     {
-        $trail = $this->trailRepository->getTrailByRunnerId($runnerFound->getId());
-
         $timedRun = $this->timingService->computingTime($trail, $dateNow);
+
         $runnerFound->setPersonalTime($timedRun);
         $this->entityManager->persist($runnerFound);
         $this->entityManager->flush();

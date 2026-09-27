@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTO\RunnerPointedDTO;
 use App\Entity\Runner;
+use App\Repository\TrailRepository;
 use Symfony\Component\ObjectMapper\ObjectMapperInterface;
 
 /**Its role is to serve as the intermediate between CheckIn controller and CheckInHandler
@@ -14,6 +15,7 @@ class MatcherService
     public function __construct(
         private ObjectMapperInterface $mapper,
         private CheckInHandler $checkInHandler,
+        private TrailRepository $trailRepository,
     )
     { }
 
@@ -27,11 +29,13 @@ class MatcherService
         $dto = new RunnerPointedDTO();
         /** Returns the data to be displayed on web interface or false if no runner was found. */
         $returnableRunner = false;
-        $runnerFound = $this->checkInHandler->checkRunner($runner, $dateNow);
+        $trail = $this->trailRepository->getTrailByRunnerId($runner->getId());
+        $runnerFound = $this->checkInHandler->checkRunner($runner, $dateNow, $trail);
         $team = $this->checkInHandler->setTimeToTeam($runnerFound);
 
         $returnableRunner = $this->mapper->map($runner, $dto);
         $dto->final_time = $team?->getFinalTime();
+        $dto->trail = $trail?->getName();
 
         return $returnableRunner;
     }
