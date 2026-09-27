@@ -4,6 +4,7 @@ const manualForm = document.getElementById("manual-form");
 const input = document.getElementById('checkin_form_checkin'); // provided that it does change its name
 const submitManualFormBtn = document.getElementById('manual-submit'); // same issue here
 const typoLinkContainer = document.getElementById('typo-link-container');
+const loadingSpinner = document.createElement('div');
 const CODE_TO_DIGIT = {
     'Digit0': '0', 'Digit1': '1', 'Digit2': '2', 'Digit3': '3', 'Digit4': '4',
     'Digit5': '5', 'Digit6': '6', 'Digit7': '7', 'Digit8': '8', 'Digit9': '9',
@@ -29,11 +30,9 @@ input.addEventListener('keydown', (e) => {
     }
     if (e.key === 'Enter') enterKeypressedCounter++;
     if (enterKeypressedCounter === 2) {
-        loadingSpinner.innerHTML = `<svg class="mr-3 -ml-1 size-5 animate-spin text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
-        const fieldset = document.getElementById('chip-input');
-        fieldset.appendChild(loadingSpinner); // works only for verif page for the moment
         handleCheckIn(form)
             .then(response => handleResult(response));
+        loading();
 
         if (typoLinkContainer) typoLinkContainer.innerHTML = '';
         buffer = '';
@@ -46,6 +45,7 @@ submitManualFormBtn?.addEventListener('click', (e) => {
     e.preventDefault();
     handleCheckIn(manualForm)
         .then(response => handleResult(response));
+    loading(true);
 });
 
 
@@ -120,5 +120,18 @@ const handleCheckIn = async (providedForm) => {
             console.log(error);
             return new Error("Une erreur est survenue.")
         });
+};
 
+/**Add a loading spinner just beside input during the process.
+ * @param manual True means that the manual form is requesting feedback. Otherwise, it refers to the "automatic" checkin or verif page.
+ */
+const loading = (manual = false) => {
+    loadingSpinner.innerHTML = `<svg class="mr-3 -ml-1 size-5 animate-spin text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+
+    /**@type HTMLElement*/
+    let fieldset;
+    if (!manual) fieldset = document.getElementById('chip-input');
+    else fieldset = document.querySelector('.loader');
+
+    fieldset.appendChild(loadingSpinner);
 };

@@ -48,7 +48,9 @@
                     {{ form_label(manualForm.captain, 'Capitaine/Équipier') }}
                     {{ form_widget(manualForm.captain) }}
                 </fieldset>
-                <button class="btn">{{ button_label|default('Ok') }}</button>
+                <div class="loader flex gap-x-3 items-center">
+                    <button id="manual-submit" type="submit" class="btn">{{ button_label|default('Ok') }}</button>
+                </div>
             {{ form_end(manualForm) }}
         </div>
 
