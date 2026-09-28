@@ -44,7 +44,10 @@ input.addEventListener('keydown', (e) => {
 submitManualFormBtn?.addEventListener('click', (e) => {
     e.preventDefault();
     handleCheckIn(manualForm)
-        .then(response => handleResult(response));
+        .then(response => handleResult(response))
+        .then(() => {
+            input.focus();
+        });
     loading(true);
 });
 
