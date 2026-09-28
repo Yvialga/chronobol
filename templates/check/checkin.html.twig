@@ -38,13 +38,13 @@
                 }
             }) }}
                 <p>Saisie manuelle</p>
-                <fieldset>
+                <fieldset id="manual-bib-input">
                     {{ form_label(manualForm.bib_number, 'Numéro de dossard') }}
                     {{ form_widget(manualForm.bib_number, {attr: {
                         'class': 'input'
                     }}) }}
                 </fieldset>
-                <fieldset>
+                <fieldset id="manual-captain-input">
                     {{ form_label(manualForm.captain, 'Capitaine/Équipier') }}
                     {{ form_widget(manualForm.captain) }}
                 </fieldset>

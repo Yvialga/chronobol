@@ -1,7 +1,7 @@
 
 const form = document.getElementById("form-of-checkin");
 const manualForm = document.getElementById("manual-form");
-const input = document.getElementById('checkin_form_checkin'); // provided that it does change its name
+const automaticInput = document.getElementById('checkin_form_checkin'); // provided that it does change its name
 const submitManualFormBtn = document.getElementById('manual-submit'); // same issue here
 const typoLinkContainer = document.getElementById('typo-link-container');
 const loadingSpinner = document.createElement('div');
@@ -22,11 +22,11 @@ form.addEventListener("submit", (event) => {
     event.preventDefault();
 });
 
-input.addEventListener('keydown', (e) => {
+automaticInput.addEventListener('keydown', (e) => {
     if (CODE_TO_DIGIT[e.code]) {
         e.preventDefault();
         buffer += CODE_TO_DIGIT[e.code];
-        input.value = buffer;
+        automaticInput.value = buffer;
     }
     if (e.key === 'Enter') enterKeypressedCounter++;
     if (enterKeypressedCounter === 2) {
@@ -36,7 +36,7 @@ input.addEventListener('keydown', (e) => {
 
         if (typoLinkContainer) typoLinkContainer.innerHTML = '';
         buffer = '';
-        input.value = buffer;
+        automaticInput.value = buffer;
         enterKeypressedCounter = 0;
     }
 });
@@ -46,7 +46,14 @@ submitManualFormBtn?.addEventListener('click', (e) => {
     handleCheckIn(manualForm)
         .then(response => handleResult(response))
         .then(() => {
-            input.focus();
+            automaticInput.focus();
+
+            const bibInput = document.querySelector("#manual-bib-input input");
+            const captainInputList = document.querySelectorAll("#manual-captain-input input");
+            bibInput.value = '';
+            for (const captainInput of captainInputList) {
+                captainInput.checked = false;
+            }
         });
     loading(true);
 });
