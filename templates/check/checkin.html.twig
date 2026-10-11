@@ -9,51 +9,55 @@
 {% endblock %}
 
 {% block main %}
-    <section class="m-8">
-        <h1 class="text-center font-bold text-4xl mt-4 mb-12">Pointage</h1>
-        <div class="flex gap-4">
-            {{ form_start(form, {
-                action: path('app_event_checkin', {slug: event.slug}),
-                attr: {
-                    'class': 'flex justify-center',
-                    id: 'form-of-checkin'
-                }
-            }) }}
-                <fieldset class="flex flex-col items-start">
-                    {{ form_label(form.checkin, 'Pointage') }}
-                    <div id="chip-input" class="flex gap-x-3">
-                        {{ form_widget(form.checkin, {attr: {
-                            'autofocus': true,
-                            'class': 'border rounded-sm'
-                        }}) }}
-                    </div>
-                    <p class="error">{{ form_errors(form.checkin) }}</p>
-                </fieldset>
-            {{ form_end(form) }}
-
-            {{ form_start(manualForm, {
-                attr: {
-                    class: 'flex flex-col items-start bg-sky-200 p-2',
-                    id: 'manual-form'
-                }
-            }) }}
-                <p>Saisie manuelle</p>
-                <fieldset id="manual-bib-input">
-                    {{ form_label(manualForm.bib_number, 'Numéro de dossard') }}
-                    {{ form_widget(manualForm.bib_number, {attr: {
-                        'class': 'input'
+    <h1 class="text-center font-bold text-4xl mt-4 mb-12">Pointage</h1>
+    <div class="flex gap-4">
+        {{ form_start(form, {
+            action: path('app_event_checkin', {slug: event.slug}),
+            attr: {
+                'class': 'flex flex-col items-end p-2 brick w-max max-w-md min-h-48 lg:w-sm',
+                id: 'form-of-checkin'
+            }
+        }) }}
+            <p class="mb-11 text-right">Pointage automatique</p>
+            <fieldset class="flex gap-x-2">
+                {{ form_label(form.checkin, 'Puce', {label_attr: {class: 'font-bold'}}) }}
+                <div id="chip-input" class="flex gap-x-3">
+                    {{ form_widget(form.checkin, {attr: {
+                        'autofocus': true,
+                        'class': 'manual-input'
                     }}) }}
-                </fieldset>
-                <fieldset id="manual-captain-input">
-                    {{ form_label(manualForm.captain, 'Capitaine/Équipier') }}
-                    {{ form_widget(manualForm.captain) }}
-                </fieldset>
-                <div class="loader flex gap-x-3 items-center">
-                    <button id="manual-submit" type="submit" class="btn">{{ button_label|default('Ok') }}</button>
                 </div>
-            {{ form_end(manualForm) }}
-        </div>
+                <p class="error">{{ form_errors(form.checkin) }}</p>
+            </fieldset>
+        {{ form_end(form) }}
 
-        {{ include('check/_name_field.html.twig') }}
-    </section>
+        {{ form_start(manualForm, {
+            attr: {
+                class: 'flex flex-col items-start p-2 brick w-max max-w-md min-h-48 lg:w-sm',
+                id: 'manual-form'
+            }
+        }) }}
+            <p>Saisie manuelle</p>
+            <p class="italic py-2 text-sm">Utiliser la touche <code class="kbd">tab</code> pour naviguer rapidement</p>
+            <fieldset id="manual-bib-input" class="flex gap-x-2">
+                {{ form_label(manualForm.bib_number, 'Numéro de dossard', {label_attr: {class: 'font-bold'}}) }}
+                {{ form_widget(manualForm.bib_number, {attr: {'class': 'manual-input'}}) }}
+            </fieldset>
+            <fieldset id="manual-captain-input" class="flex gap-x-2">
+                {{ form_label(manualForm.captain, 'Capitaine/Équipier', {label_attr: {class: 'font-bold'}}) }}
+                {{ form_widget(manualForm.captain, {attr: {class: 'flex gap-x-1'}}) }}
+            </fieldset>
+            <div class="loader flex mt-3 items-center">
+                <button id="manual-submit" type="submit" class="btn">{{ button_label|default('Ok') }}</button>
+            </div>
+        {{ form_end(manualForm) }}
+    </div>
+
+    {{ include('check/_name_field.html.twig') }}
+
+    <div class="brick h-80 overflow-auto overscroll-contain p-4">
+        <ul id="result-block">
+            <p class="uppercase font-light">Début de la compétition</p>
+        </ul>
+    </div>
 {% endblock %}

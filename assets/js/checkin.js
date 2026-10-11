@@ -87,10 +87,10 @@ const handleResult = (runner) => {
         }
     }
     else {
-        firstnameOutput.innerText = runner.firstname;
-        lastnameOutput.innerText = runner.lastname;
 
         if (onVerifPage) {
+            firstnameOutput.innerText = runner.firstname;
+            lastnameOutput.innerText = runner.lastname;
             bibOutput.innerText = runner.bib_number;
             trailOutput.innerText = runner.trail;
             bibElement.classList.remove('invisible');
@@ -105,6 +105,48 @@ const handleResult = (runner) => {
             typoCorrection.innerText = 'Corrigez une faute de frappe';
             typoCorrection.classList.add('underline', 'hover:no-underline');
             typoLinkContainer.appendChild(typoCorrection);
+        }
+        else { // on checkin page
+            const feedbackTag = document.createElement('li');
+            feedbackTag.classList.add('flex','gap-x-1')
+            const markerTag = document.createElement('span');
+            markerTag.classList.add('pr-2');
+            markerTag.innerText = '•';
+
+            const trailSpan = document.createElement('span');
+            trailSpan.innerText = runner.trail;
+
+            const bibSpan = document.createElement('span');
+            bibSpan.innerText = 'n°' + runner.bib_number;
+
+            const firstnameSpan = document.createElement('span');
+            if (runner.final_time) {
+                firstnameSpan.innerText = "l'équipe de " + runner.firstname;
+            } else {
+                firstnameSpan.innerText = runner.firstname;
+            }
+            const lastnameSpan = document.createElement('span');
+            lastnameSpan.classList.add('uppercase');
+            lastnameSpan.innerText = runner.lastname;
+
+            const timeSpan = document.createElement('span');
+            let timeDisplayed;
+            let textIfTeamFinished;
+            if (runner.final_time) {
+                textIfTeamFinished = 'a fini en ';
+                timeDisplayed = new Date(runner.final_time);
+            }
+            else {
+                textIfTeamFinished = 'en ';
+                timeDisplayed = new Date(runner.personal_time);
+            }
+            timeSpan.innerText = textIfTeamFinished + timeDisplayed.getHours() + ":" + timeDisplayed.getMinutes() + ":" + timeDisplayed.getSeconds();
+
+            feedbackTag.append(trailSpan, bibSpan, firstnameSpan, lastnameSpan, timeSpan);
+            feedbackTag.insertBefore(markerTag, feedbackTag.firstChild);
+
+            const resultBlock = document.getElementById('result-block');
+            resultBlock.insertBefore(feedbackTag, resultBlock.firstChild);
         }
 
     }

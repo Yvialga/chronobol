@@ -7,3 +7,12 @@
 body {
     background-color: oklch(96.7% 0.003 264.542);
 }
+
+.brick {
+    @apply border border-1 rounded-md border-gray-400;
+}
+
+.manual-input {
+    @apply border-gray-400 border rounded-sm;
+    background: white;
+}

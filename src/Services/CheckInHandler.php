@@ -38,9 +38,6 @@ class CheckInHandler
         elseif ($bib_number != null && $role != null) $runner = $this->runnerRepository->findByBibAndRole($bib_number, $role->value);
         else $runner = null;
 
-        $this->logger->alert('yes : '.$runner->getFirstname().' '.$runner->getLastname());
-
-
         if (is_null($runner)) {
             return null;
         }
