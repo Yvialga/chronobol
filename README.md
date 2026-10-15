@@ -81,3 +81,7 @@ symfony console --env=test d:m:m
 ```bash
 symfony console --env=test d:f:l
 ```
+
+```bash
+symfony php bin/phpunit <path_if_desired>
+```
