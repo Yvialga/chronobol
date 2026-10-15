@@ -60,24 +60,27 @@ class RunnerRepository extends ServiceEntityRepository
     }
 
     /** Get all members of a team by the bib number. Parameter excludeRunner is optional and is must be used to exclude a specified Runner
-     * @param int $bib
-     * @param Runner|null $excludedRunner
-     * @return array<int, Runner>
+     * @param Runner $runner - to get the bib and the id for exclude the runner provides.
+     * @param bool $excludedRunner
+     * @return int
      */
-    public function findTeamMembersByBibNumber (int $bib, ?Runner $excludedRunner = null) : array
+    public function countRemainingTeamMembersByBibNumber (Runner $runner, bool $excludedRunner = false) : int
     {
         $qb = $this->createQueryBuilder('r')
+            ->select('COUNT(r.bib_number)')
             ->where('r.bib_number = :bib')
-            ->setParameter('bib', $bib);
+            ->setParameter('bib', $runner->getBibNumber())
+            ->groupBy('r.bib_number');
 
         if ($excludedRunner) {
             $qb
                 ->andWhere('r.id != :excludedRunner')
-                ->setParameter('excludedRunner', $excludedRunner->getId());
+                ->setParameter('excludedRunner', $runner->getId())
+                ->andWhere('r.personal_time is null');
         }
-
-        return $qb
-            ->getQuery()
-            ->getResult();
+        $count = $qb->getQuery()
+                    ->getOneOrNullResult();
+        // 1 because query result index begin to 1, not 0
+        return $count[1];
     }
 }

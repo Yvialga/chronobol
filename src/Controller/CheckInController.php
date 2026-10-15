@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\DTO\RunnerPointedDTO;
 use App\Entity\Event;
+use App\Exception\AlreadyCheckedException;
+use App\Exception\NotFoundException;
 use App\Form\CheckinForm;
 use App\Form\ManualCheckinForm;
 use App\Repository\RunnerRepository;
@@ -13,16 +15,14 @@ use App\Services\CheckInHandler;
 use App\Services\MatcherService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\ObjectMapper\ObjectMapper;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\ObjectMapper\ObjectMapperInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/event', name: 'app_event_')]
 final class CheckInController extends AbstractController
@@ -83,10 +83,19 @@ final class CheckInController extends AbstractController
             // Initialization here to not lose time with intermediate.s query.ies to the database
             $dateNow = new DateTimeImmutable('now', new \DateTimeZone('UTC'));
 
-            $runnerFound = $checkinHandler->searchRunner(chip: $data->checkin);
+            try {
+                $runnerFound = $checkinHandler->searchRunner(chip: $data->checkin);
+            } catch (NotFoundException) {
+                throw new NotFoundHttpException('Compétiteur introuvable');
+            }
 
             if ($runnerFound) {
-                $returnableRunner = $matcher->checkInLogic($runnerFound, $dateNow);
+                try {
+                    $returnableRunner = $checkinHandler->checkIn($runnerFound, $dateNow);
+                }
+                catch (AlreadyCheckedException) {
+                    throw new ConflictHttpException($runnerFound->getFirstname(). ' ' . strtoupper($runnerFound->getLastname()) .' a déjà été pointé');
+                }
             }
             return $this->json($returnableRunner??false, Response::HTTP_OK);
         }
@@ -97,7 +106,12 @@ final class CheckInController extends AbstractController
 
             $runner = $checkinHandler->searchRunner(bib_number: $data->bib_number, role: $data->captain);
             if ($runner) {
-                $returnableRunner = $matcher->checkInLogic($runner, $dateNow);
+                try {
+                    $returnableRunner = $checkinHandler->checkIn($runner, $dateNow);
+                }
+                catch (AlreadyCheckedException $e) {
+                    throw new ConflictHttpException($runner->getFirstname(). ' ' . strtoupper($runner->getLastname()) .' a déjà été pointé');
+                }
             }
             return $this->json($returnableRunner??false, Response::HTTP_OK);
         }
