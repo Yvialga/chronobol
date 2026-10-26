@@ -12,7 +12,6 @@ use App\Repository\RunnerRepository;
 use App\Repository\TeamRepository;
 use App\Repository\TrailRepository;
 use App\Services\CheckInHandler;
-use App\Services\MatcherService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
@@ -69,8 +68,7 @@ final class CheckInController extends AbstractController
     public function checkin (
         #[MapEntity(mapping: ['slug' => 'slug'])] Event $event,
         Request $request,
-        CheckInHandler $checkinHandler,
-        MatcherService $matcher
+        CheckInHandler $checkinHandler
     ): Response
     {
         $form = $this->createForm(CheckinForm::class);
@@ -104,7 +102,13 @@ final class CheckInController extends AbstractController
             $data = $manualForm->getData();
             $dateNow = new DateTimeImmutable('now', new \DateTimeZone('UTC'));
 
-            $runner = $checkinHandler->searchRunner(bib_number: $data->bib_number, role: $data->captain);
+            try {
+                $runner = $checkinHandler->searchRunner(bib_number: $data->bib_number, role: $data->captain);
+            }
+            catch (NotFoundException) {
+                throw new NotFoundHttpException('Compétiteur introuvable');
+            }
+
             if ($runner) {
                 try {
                     $returnableRunner = $checkinHandler->checkIn($runner, $dateNow);

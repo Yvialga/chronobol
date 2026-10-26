@@ -29,6 +29,7 @@
                 </div>
                 <p class="error">{{ form_errors(form.checkin) }}</p>
             </fieldset>
+        <div class="error-helper"></div>
         {{ form_end(form) }}
 
         {{ form_start(manualForm, {
@@ -49,6 +50,7 @@
             </fieldset>
             <div class="loader flex mt-3 items-center">
                 <button id="manual-submit" type="submit" class="btn">{{ button_label|default('Ok') }}</button>
+                <div class="error-helper"></div>
             </div>
         {{ form_end(manualForm) }}
     </div>
