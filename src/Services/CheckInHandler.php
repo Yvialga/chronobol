@@ -12,6 +12,7 @@ use App\Repository\TeamRepository;
 use App\Repository\TrailRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\ObjectMapper\ObjectMapperInterface;
 
 /** Service of operations and business logic when a chip is check-in by RFID reader. */
@@ -23,7 +24,8 @@ class CheckInHandler
         private RunnerRepository       $runnerRepository,
         private TeamRepository         $teamRepository,
         private TrailRepository        $trailRepository,
-        private TimingService          $timingService
+        private TimingService          $timingService,
+        private LoggerInterface         $logger
     ) {
     }
 
@@ -65,10 +67,10 @@ class CheckInHandler
         $trail = $this->trailRepository->getTrailByRunnerId($runner->getId());
         $calculatedTimed = $this->timingService->computingTime($trail, $dateNow);
 
-        $runnerChecked = $this->checkSpecifiedRunner($runner, $calculatedTimed);
-        if ($this->isRunnerChecked($runnerChecked)){
+        if ($this->isRunnerChecked($runner)){
             throw new AlreadyCheckedException();
         }
+        $runnerChecked = $this->checkSpecifiedRunner($runner, $calculatedTimed);
 
         $returnableRunner = $this->mapper->map($runner, $dto);
         $dto->trail = $trail?->getName();
