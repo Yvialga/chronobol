@@ -80,7 +80,7 @@ class RunnerRepository extends ServiceEntityRepository
         }
         $count = $qb->getQuery()
                     ->getOneOrNullResult();
-        // 1 because query result index begin to 1, not 0
-        return $count[1];
+        // 1 because query result index begin to 1, not 0. return 0 because $count is null because $qb return [] and null with getOneOrNULLResult
+        return $count[1]??0;
     }
 }
