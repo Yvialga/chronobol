@@ -46,8 +46,8 @@ class Runner
     #[ORM\Column]
     private bool $is_underage = false;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $medical_certificate = null;
+    #[ORM\Column]
+    private bool $medical_certificate = false;
 
     #[ORM\Column]
     private bool $parental_consent = false;
@@ -67,7 +67,7 @@ class Runner
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
 
-    #[ORM\ManyToOne(inversedBy: 'runners')]
+    #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'runners')]
     #[ORM\JoinColumn(name: 'fk_team_id', nullable: true)]
     private ?Team $fk_team_id = null;
 
@@ -230,6 +230,7 @@ class Runner
     public function setCreatedAt(): static
     {
         $this->created_at = new \DateTimeImmutable();
+        $this->updated_at = new DateTimeImmutable('now', new \DateTimeZone('UTC'));
 
         return $this;
     }

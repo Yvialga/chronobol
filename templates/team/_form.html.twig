@@ -1,4 +1,109 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    {{ form_errors(form) }}
+
+    {{ form_row(form.category) }}
+    {{ form_row(form.paid_registration) }}
+    {{ form_row(form.deposit) }}
+    {{ form_row(form.electric_bike) }}
+    {{ form_row(form.meal_count) }}
+    {{ form_row(form.fk_trail_id) }}
+
+    {% for runner in form.runners %}
+        <h3 class="text-xl font-bold mt-4 mb-2">{% if loop.first %}Capitaine{% else %}Coéquipier{% endif %}</h3>
+        <fieldset>
+{#            {{ dump(runner) }}#}
+            <label for="{{ field_name(runner.firstname) }}">Prénom</label>
+            <input
+                type="text"
+                class="input"
+                name="{{ field_name(runner.firstname) }}"
+                id="{{ runner.firstname.vars.id }}"
+                value="{{ field_value(runner.firstname) }}"
+                placeholder="Christophe">
+        </fieldset>
+        <fieldset>
+            <label for="{{ field_name(runner.lastname) }}">Nom</label>
+            <input
+                type="text"
+                class="input"
+                name="{{ field_name(runner.lastname) }}"
+                id="{{ runner.lastname.vars.id }}"
+                value="{{ field_value(runner.lastname) }}"
+                placeholder="Belliard">
+        </fieldset>
+        <fieldset>
+            <label for="{{ field_name(runner.age) }}">Age</label>
+            <input
+                type="date"
+                class="input"
+                name="{{ field_name(runner.age) }}"
+                id="{{ runner.age.vars.id }}"
+                value="{{ field_value(runner.age) }}">
+        </fieldset>
+        {{ form_row(runner.gender, {
+            label: 'Genre',
+            attr: {class: 'select validator'}
+        }) }}
+        <fieldset>
+            <label for="{{ field_name(runner.email) }}">Email</label>
+            <input
+                type="email"
+                class="input"
+                name="{{ field_name(runner.email) }}"
+                id="{{ runner.email.vars.id }}"
+                value="{{ field_value(runner.email) }}"
+                placeholder="chris.belliard@gmail.com">
+        </fieldset>
+        <fieldset>
+            <label for="{{ field_name(runner.bib_number) }}">Numéro de dossard</label>
+            <input
+                type="number"
+                class="input"
+                name="{{ field_name(runner.bib_number) }}"
+                id="{{ runner.bib_number.vars.id }}"
+                value="{{ field_value(runner.bib_number) }}"
+                placeholder="56">
+        </fieldset>
+        <fieldset>
+            <label for="{{ field_name(runner.chip_id) }}">Identifiant puce</label>
+            <input
+                type="text"
+                class="input"
+                name="{{ field_name(runner.chip_id) }}"
+                id="{{ runner.chip_id.vars.id }}"
+                value="{{ field_value(runner.chip_id) }}"
+                placeholder="0007825648">
+        </fieldset>
+        <fieldset>
+            <label for="{{ field_name(runner.is_underage) }}">Mineur ?</label>
+            <input
+                type="checkbox"
+                class=""
+                name="{{ field_name(runner.is_underage) }}"
+                id="{{ runner.is_underage.vars.id }}"
+                value="{{ field_value(runner.is_underage) }}">
+        </fieldset>
+        <fieldset>
+            <label for="{{ field_name(runner.medical_certificate) }}">Certificat médical</label>
+            <input
+                type="checkbox"
+                class=""
+                name="{{ field_name(runner.medical_certificate) }}"
+                id="{{ runner.medical_certificate.vars.id }}"
+                value="{{ field_value(runner.medical_certificate) }}"
+                placeholder="oui/non">
+        </fieldset>
+        <fieldset>
+            <label for="{{ field_name(runner.parental_consent) }}">Consentement parental</label>
+            <input
+                type="checkbox"
+                class=""
+                name="{{ field_name(runner.parental_consent) }}"
+                id="{{ runner.parental_consent.vars.id }}"
+                value="{{ field_value(runner.parental_consent) }}">
+        </fieldset>
+
+    {% endfor %}
+
+    <button class="btn">{{ button_label|default('Sauvegarder') }}</button>
 {{ form_end(form) }}

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Event;
 use App\Entity\Runner;
 use App\Entity\Team;
+use App\Enum\StatusEnum;
 use App\Form\TeamForm;
 use App\Repository\RunnerRepository;
 use App\Repository\TeamRepository;
@@ -46,25 +47,30 @@ final class TeamController extends AbstractController
     public function new(
         #[MapEntity(mapping: ['slug' => 'slug'])] Event $event,
         Request $request,
-        EntityManagerInterface $entityManager,
-        TrailRepository $trailRepository
+        EntityManagerInterface $entityManager
     ): Response
     {
         $team = new Team();
         // defining the 2 team members manually (Technical debt, see Documentation of event creation)
         $captain = new Runner();
-        $team->getRunners()->add($captain);
+        $team->addRunner($captain);
+        $captain->setIsCaptain(true);
         $teammate = new Runner();
-        $team->getRunners()->add($teammate);
+        $team->addRunner($teammate);
 
         $form = $this->createForm(TeamForm::class, $team);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $captain->setStatus(StatusEnum::register);
+            $teammate->setStatus(StatusEnum::register);
+            // Algo pour mettre le STATUS adéquat
+            // vérifier que le N° de DOSSARD n'est pas déjà utilisé
+            // vérifier l'unicité de l'ID de la puce
             $entityManager->persist($team);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_team_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_team_index', ['slug' => $event->getSlug()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('team/new.html.twig', [
@@ -74,7 +80,7 @@ final class TeamController extends AbstractController
         ]);
     }
 
-    #[Route('{slug}/team/{id}/edit', name: 'app_team_edit', methods: ['GET', 'POST'])]
+    #[Route('{slug}/team/{id}/edit', name: 'app_team_edit', options: ['expose' => true], methods: ['GET', 'POST'])]
     public function edit(
         #[MapEntity(mapping: ['slug' => 'slug'])] Event $event,
         Request $request,

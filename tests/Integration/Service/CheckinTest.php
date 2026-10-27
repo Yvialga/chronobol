@@ -32,7 +32,7 @@ class CheckinTest extends KernelTestCase
         $container = static::getContainer();
         $checkinService = $container->get(CheckInHandler::class);
 
-        $runner = $checkinService->runnerPointer('0006390192');
+        $runner = $checkinService->searchRunner(chip: '0006390192');
 
         $this->assertNotNull($runner->getPersonalTime());
     }

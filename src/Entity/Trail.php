@@ -39,7 +39,7 @@ class Trail
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?\DateTimeImmutable $updated_at = null;
 
-    #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'fk_trail_id')]
+    #[ORM\ManyToOne(cascade: ['persist', 'remove'], inversedBy: 'fk_trail_id')]
     #[ORM\JoinColumn(name: 'fk_event_id', nullable: false)]
     private ?Event $fk_event_id = null;
 

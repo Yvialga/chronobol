@@ -42,25 +42,45 @@ class RunnerRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    /** Get all members of a team by the bib number. Parameter excludeRunner is optional and is must be used to exclude a specified Runner
+    /**
      * @param int $bib
-     * @param Runner|null $excludedRunner
-     * @return array<int, Runner>
+     * @param int $role This may constitute a *technical debt*. In fact, if we use Postgre, PGSQL accepts "true" value, but we pass it 0 or 1 depending on TeamRole enum
+     * @return Runner|null
      */
-    public function findTeamMembersByBibNumber (int $bib, ?Runner $excludedRunner = null) : array
+    public function findByBibAndRole (int $bib, int $role): ?Runner
+    {
+        // We check both bib and is_captain because in the event, the two members of one team have the same bib.
+        return $this->createQueryBuilder('runner')
+            ->andWhere('runner.bib_number = :bib')
+            ->andWhere('runner.is_captain = :role')
+            ->setParameter('bib', $bib)
+            ->setParameter('role', $role)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /** Get all members of a team by the bib number. Parameter excludeRunner is optional and is must be used to exclude a specified Runner
+     * @param Runner $runner - to get the bib and the id for exclude the runner provides.
+     * @param bool $excludedRunner
+     * @return int
+     */
+    public function countRemainingTeamMembersByBibNumber (Runner $runner, bool $excludedRunner = false) : int
     {
         $qb = $this->createQueryBuilder('r')
+            ->select('COUNT(r.bib_number)')
             ->where('r.bib_number = :bib')
-            ->setParameter('bib', $bib);
+            ->setParameter('bib', $runner->getBibNumber())
+            ->groupBy('r.bib_number');
 
         if ($excludedRunner) {
             $qb
                 ->andWhere('r.id != :excludedRunner')
-                ->setParameter('excludedRunner', $excludedRunner->getId());
+                ->setParameter('excludedRunner', $runner->getId())
+                ->andWhere('r.personal_time is null');
         }
-
-        return $qb
-            ->getQuery()
-            ->getResult();
+        $count = $qb->getQuery()
+                    ->getOneOrNullResult();
+        // 1 because query result index begin to 1, not 0. return 0 because $count is null because $qb return [] and null with getOneOrNULLResult
+        return $count[1]??0;
     }
 }

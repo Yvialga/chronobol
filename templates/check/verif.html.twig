@@ -2,7 +2,15 @@
 
 {% block title %}Vérification des puces{% endblock %}
 
-{% block specificjs %}<script defer src="{{ asset('js/checkin.js') }}"></script>{% endblock %}
+{% block specificjs %}
+    <script defer src="{{ asset('js/checkin.js') }}"></script>
+    <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+{% endblock %}
+
+{% block item %}
+    {{ include('layout/global.html.twig') }}
+{% endblock %}
 
 {% block main %}
     <h1 class="text-center font-bold text-4xl mt-4 mb-12">Vérification des puces</h1>
@@ -16,13 +24,16 @@
     }) }}
         <fieldset class="flex flex-col items-start">
             {{ form_label(form.checkin, 'Puce RFID :') }}
-            {{ form_widget(form.checkin, {attr: {
-                'autofocus': true,
-                'class': 'border rounded-sm'
-            }}) }}
+            <div id="chip-input" class="flex gap-x-3">
+                {{ form_widget(form.checkin, {attr: {
+                    'autofocus': true,
+                    'class': 'border rounded-sm'
+                }}) }}
+            </div>
             <p class="error">{{ form_errors(form.checkin) }}</p>
         </fieldset>
     {{ form_end(form) }}
 
     {{ include('check/_name_field.html.twig') }}
+    <div class="js-event-slug" data-slug="{{ event.slug }}"></div>
 {% endblock %}

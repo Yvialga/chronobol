@@ -36,9 +36,8 @@ class RunnerForm extends AbstractType
             ->add('email', EmailType::class)
             ->add('bib_number', NumberType::class)
             ->add('chip_id', TextType::class)
-            ->add('is_captain', CheckboxType::class)
             ->add('is_underage', CheckboxType::class)
-            ->add('medical_certificate', TextType::class)
+            ->add('medical_certificate', CheckboxType::class)
             ->add('parental_consent', CheckboxType::class)
         ;
     }

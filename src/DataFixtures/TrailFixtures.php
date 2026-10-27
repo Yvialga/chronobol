@@ -29,7 +29,6 @@ class TrailFixtures extends Fixture implements DependentFixtureInterface
             $trail->setRunState(RunStateEnum::PLANNED);
             $trail->setDescription($t[1]);
             $trail->setMemberNumber(2);
-            $trail->setUpdatedAt(new \DateTimeImmutable('now', new \DateTimeZone('UTC')));
             $trail->setFkEventId($this->getReference(EventFixtures::BOL_2026_REFERENCE, Event::class));
             $this->addReference($t[3], $trail);
             $manager->persist($trail);

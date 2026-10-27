@@ -4,39 +4,55 @@ namespace App\Controller;
 
 use App\DTO\RunnerPointedDTO;
 use App\Entity\Event;
+use App\Exception\AlreadyCheckedException;
+use App\Exception\NotFoundException;
 use App\Form\CheckinForm;
+use App\Form\ManualCheckinForm;
 use App\Repository\RunnerRepository;
 use App\Repository\TeamRepository;
+use App\Repository\TrailRepository;
 use App\Services\CheckInHandler;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\ObjectMapper\ObjectMapper;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\ObjectMapper\ObjectMapperInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/event', name: 'app_event_')]
 final class CheckInController extends AbstractController
 {
+    /* Route to test chip assignment before the starting of the event */
     #[Route('/{slug}/verif', name: 'verif', methods: ['GET', 'POST'])]
-    public function verif (#[MapEntity(mapping: ['slug' => 'slug'])] Event $event, Request $request, RunnerRepository $runnerRepository, ObjectMapperInterface $mapper): Response
+    public function verif (
+        #[MapEntity(mapping: ['slug' => 'slug'])] Event $event,
+        Request $request,
+        RunnerRepository $runnerRepository,
+        TeamRepository $teamRepository,
+        TrailRepository $trailRepository,
+        ObjectMapperInterface $mapper
+    ): Response
     {
         $form = $this->createForm(CheckinForm::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $runner = $runnerRepository->findByChip($data->checkin);
+            $runnerIfExist = $runnerRepository->findByChip($data->checkin);
+            $dtoForSimplifiedAccess = new RunnerPointedDTO(); // instance pour accéder plus facilement aux propriétés du dto
             /** Return state of the data to be displayed on web interface or false if no runner was found. */
             $runnerReturnabled = false;
-            if ($runner) {
-                $runnerReturnabled = $mapper->map($runner, RunnerPointedDTO::class);
+            if ($runnerIfExist) {
+                $team = $teamRepository->findByFK($runnerIfExist->getFkTeamId());
+
+                $runnerReturnabled = $mapper->map($runnerIfExist, $dtoForSimplifiedAccess);
+                $trail = $trailRepository->getTrailByRunnerId($runnerIfExist->getId());
+                $dtoForSimplifiedAccess->trail = $trail->getName();
+                $dtoForSimplifiedAccess->team_id = $team->getId();
             }
             /* Here, the returned data affects how JavaScript displays the data */
             return $this->json($runnerReturnabled, Response::HTTP_OK);
@@ -52,33 +68,61 @@ final class CheckInController extends AbstractController
     public function checkin (
         #[MapEntity(mapping: ['slug' => 'slug'])] Event $event,
         Request $request,
-        RunnerRepository $runnerRepository,
-        ObjectMapperInterface $mapper,
         CheckInHandler $checkinHandler
     ): Response
     {
         $form = $this->createForm(CheckinForm::class);
+        $manualForm = $this->createForm(ManualCheckinForm::class);
+        $manualForm->handleRequest($request);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $runner = $checkinHandler->runnerPointer($data->checkin);
-            $team = $checkinHandler->setTimeToTeam($runner);
-            /** Returns the data to be displayed on web interface or false if no runner was found. */
-            $returnableRunner = false;
-            if ($runner) {
-                $returnableRunner = $mapper->map($runner, RunnerPointedDTO::class);
+            // Initialization here to not lose time with intermediate.s query.ies to the database
+            $dateNow = new DateTimeImmutable('now', new \DateTimeZone('UTC'));
 
+            try {
+                $runnerFound = $checkinHandler->searchRunner(chip: $data->checkin);
+            } catch (NotFoundException) {
+                throw new NotFoundHttpException('Compétiteur introuvable');
             }
-            /** @var $finalTime
-             * @type DateTimeImmutable */
-            $finalTime = $team?->getFinalTime();
-            /* Here, the returned data affects how JavaScript displays the data */
-            return $this->json([$returnableRunner, $finalTime ?: ''], Response::HTTP_OK);
+
+            if ($runnerFound) {
+                try {
+                    $returnableRunner = $checkinHandler->checkIn($runnerFound, $dateNow);
+                }
+                catch (AlreadyCheckedException) {
+                    throw new ConflictHttpException($runnerFound->getFirstname(). ' ' . strtoupper($runnerFound->getLastname()) .' a déjà été pointé');
+                }
+            }
+            return $this->json($returnableRunner??false, Response::HTTP_OK);
+        }
+
+        if ($manualForm->isSubmitted() && $manualForm->isValid()) {
+            $data = $manualForm->getData();
+            $dateNow = new DateTimeImmutable('now', new \DateTimeZone('UTC'));
+
+            try {
+                $runner = $checkinHandler->searchRunner(bib_number: $data->bib_number, role: $data->captain);
+            }
+            catch (NotFoundException) {
+                throw new NotFoundHttpException('Compétiteur introuvable');
+            }
+
+            if ($runner) {
+                try {
+                    $returnableRunner = $checkinHandler->checkIn($runner, $dateNow);
+                }
+                catch (AlreadyCheckedException $e) {
+                    throw new ConflictHttpException($runner->getFirstname(). ' ' . strtoupper($runner->getLastname()) .' a déjà été pointé');
+                }
+            }
+            return $this->json($returnableRunner??false, Response::HTTP_OK);
         }
 
         return $this->render('check/checkin.html.twig', [
             'form' => $form,
+            'manualForm' => $manualForm,
             'event' => $event
         ]);
     }

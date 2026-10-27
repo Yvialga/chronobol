@@ -10,11 +10,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 class RunnerPointedDTO
 {
     #[Assert\NotBlank]
-    public string $bib_number;
+    public int $bib_number;
+
+    public int $team_id;
 
     public string $firstname;
 
     public string $lastname;
+
+    public string $trail;
 
     public ?\DateTimeImmutable $personal_time = null;
 

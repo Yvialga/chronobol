@@ -2,6 +2,19 @@
 
 {% block title %}Liste des compétitions{% endblock %}
 
+{% block item %}
+    {% if is_granted('ROLE_ADMIN') %}
+        <div>
+            <li>
+                <button>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                    <a href="{{ path('app_event_new') }}">Nouvelle Compétition</a>
+                </button>
+            </li>
+        </div>
+    {% endif %}
+{% endblock %}
+
 {% block main %}
     <h1 class="text-3xl font-semibold mb-4">Compétitions</h1>
     <div class="flex justify-end">
@@ -11,7 +24,7 @@
     </div>
     <div class="flex flex-col gap-y-4 items-start">
         {% for event in events %}
-            <div class="flex flex-col max-w-3xl p-4 relative rounded-md shadow-lg w-full">
+            <div class="flex flex-col max-w-3xl p-4 relative rounded-md shadow-lg w-full hover:scale-101 transition-transform">
                 <a href="{{ path('app_event_dashboard', {slug: event.slug, id: event.id}) }}"
                     class="absolute inset-0">
                 </a>
