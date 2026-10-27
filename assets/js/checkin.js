@@ -147,7 +147,7 @@ const handleResult = (runner, originForm) => {
             markerTag.innerText = '•';
 
             const trailSpan = document.createElement('span');
-            trailSpan.innerText = runner.trail;
+            trailSpan.innerText = runner.trail + " : ";
 
             const bibSpan = document.createElement('span');
             bibSpan.innerText = 'n°' + runner.bib_number;
@@ -166,11 +166,11 @@ const handleResult = (runner, originForm) => {
             let timeDisplayed;
             let textIfTeamFinished;
             if (runner.final_time) {
-                textIfTeamFinished = 'a fini en ';
+                textIfTeamFinished = 'vient de terminer ';
                 timeDisplayed = new Date(runner.final_time);
             }
             else {
-                textIfTeamFinished = 'en ';
+                textIfTeamFinished = 'a fini en ';
                 timeDisplayed = new Date(runner.personal_time);
             }
             timeSpan.innerText = textIfTeamFinished + ("0" + timeDisplayed.getHours()).slice(-2) + ":" + ("0" + timeDisplayed.getMinutes()).slice(-2) + ":" + ("0" + timeDisplayed.getSeconds()).slice(-2);
@@ -251,8 +251,6 @@ const loading = (manual = false) => {
 
 const resetCollectionFormErrorMessage = () => {
     const formCollection = document.querySelectorAll(`form .error-helper`);
-    console.log(formCollection)
-    console.log("i")
 
     for (const form of formCollection) {
         if (form.hasChildNodes()) {
