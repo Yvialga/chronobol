@@ -201,10 +201,10 @@ const handleError = (response, originForm) => {
         errorMessage = "Déjà pointé";
     }
     else if (response.status === 422) {
-        errorMessage = "Veuillez saisir l'identifiant de la puce";
+        errorMessage = "Veuillez saisir correctement toutes les informations requises";
     }
     else {
-        errorMessage = "Erreur rencontrée";
+        errorMessage = "Erreur rencontrée : " + response.status;
     }
     const errorTag = document.createElement("p");
     errorTag.innerText = errorMessage;

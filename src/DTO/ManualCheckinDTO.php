@@ -11,6 +11,7 @@ class ManualCheckinDTO
     #[Assert\GreaterThan(0)]
     public int $bib_number;
 
+    #[Assert\NotBlank(message: "Sélectionner le rôle du compétiteur")]
     public TeamRole $captain;
 
 }
